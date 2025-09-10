@@ -1,18 +1,16 @@
-# 🚀 Kandid AI - LinkedIn Outreach Platform
+# Kandid AI Assignment 
 
-A modern, AI-powered LinkedIn outreach platform built with Next.js 15, featuring comprehensive lead management, campaign tracking, and automated messaging capabilities.
+## Features
 
-## ✨ Features
+- **Authentication**: Email/password and Google OAuth integration
+- **Dashboard**: Real-time campaign and lead analytics
+- **Lead Management**: Infinite scrolling, search, and filtering
+- **Campaign Tracking**: Progress monitoring and success metrics
+- **LinkedIn Integration**: Account management and outreach automation
+- **Responsive Design**: Mobile-friendly interface
+- **Performance**: Optimized with React.memo and database indexing
 
-- 🔐 **Authentication**: Email/password and Google OAuth integration
-- 📊 **Dashboard**: Real-time campaign and lead analytics
-- 👥 **Lead Management**: Infinite scrolling, search, and filtering
-- 📈 **Campaign Tracking**: Progress monitoring and success metrics
-- 🎯 **LinkedIn Integration**: Account management and outreach automation
-- 📱 **Responsive Design**: Mobile-friendly interface
-- ⚡ **Performance**: Optimized with React.memo and database indexing
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS, shadcn/ui
@@ -21,7 +19,7 @@ A modern, AI-powered LinkedIn outreach platform built with Next.js 15, featuring
 - **State Management**: Zustand, TanStack Query
 - **Deployment**: Vercel (recommended)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -79,7 +77,7 @@ bun run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to see your application!
 
-## 📚 Available Scripts
+## Available Scripts
 
 ```bash
 # Development
@@ -99,7 +97,7 @@ bun run db:seed      # Seed with sample data
 bun run type-check   # TypeScript type checking
 ```
 
-## 🗄️ Database Setup Options
+## Database Setup Options
 
 ### Option 1: Local PostgreSQL
 ```bash
@@ -122,13 +120,13 @@ docker-compose up -d
 - **Supabase**: [supabase.com](https://supabase.com)
 - **Railway**: [railway.app](https://railway.app)
 
-## 📖 Documentation
+## Documentation
 
 - [Database Setup Guide](./DATABASE_SETUP.md) - Comprehensive database setup
 - [API Documentation](./docs/api.md) - API endpoints and usage
 - [Component Library](./docs/components.md) - UI components reference
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 kandid-ai/
@@ -151,7 +149,7 @@ kandid-ai/
 └── package.json
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Database Schema
 The application uses the following main tables:
@@ -170,7 +168,7 @@ The application uses the following main tables:
 - **Zustand**: UI state, search filters, selections
 - **TanStack Query**: Server state, caching, optimistic updates
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 1. Connect your GitHub repository to Vercel
@@ -182,7 +180,7 @@ The application uses the following main tables:
 - **Netlify**: Static site deployment
 - **Docker**: Containerized deployment
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -190,11 +188,11 @@ The application uses the following main tables:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is proprietary software. All rights reserved.
 
-## 🆘 Support
+## Support
 
 For support and questions:
 - Check the [Documentation](./DATABASE_SETUP.md)
@@ -203,4 +201,4 @@ For support and questions:
 
 ---
 
-Built with ❤️ using Next.js, TypeScript, and modern web technologies.
+Built with Next.js, TypeScript, and modern web technologies.
