@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, campaigns } from "@/lib/db";
+import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,10 +12,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userCampaigns = await db
-      .select()
-      .from(campaigns)
-      .where(eq(campaigns.userId, session.user.id));
+    const userCampaigns = await db.campaign.findMany({
+      where: {
+        userId: session.user.id,
+      },
+    });
 
     return NextResponse.json(userCampaigns);
   } catch (error) {
@@ -41,7 +41,9 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
     };
 
-    const [campaign] = await db.insert(campaigns).values(newCampaign).returning();
+    const campaign = await db.campaign.create({
+      data: newCampaign,
+    });
 
     return NextResponse.json(campaign);
   } catch (error) {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, campaigns } from "@/lib/db";
+import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { eq, and } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
@@ -18,17 +17,18 @@ export async function GET(
 
     const { id } = await params;
 
-    const campaign = await db
-      .select()
-      .from(campaigns)
-      .where(and(eq(campaigns.id, id), eq(campaigns.userId, session.user.id)))
-      .limit(1);
+    const campaign = await db.campaign.findFirst({
+      where: {
+        id: id,
+        userId: session.user.id,
+      },
+    });
 
-    if (!campaign.length) {
+    if (!campaign) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
-    return NextResponse.json(campaign[0]);
+    return NextResponse.json(campaign);
   } catch (error) {
     console.error("Error fetching campaign:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -51,20 +51,30 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const [updatedCampaign] = await db
-      .update(campaigns)
-      .set({
+    const updatedCampaign = await db.campaign.updateMany({
+      where: {
+        id: id,
+        userId: session.user.id,
+      },
+      data: {
         ...body,
         updatedAt: new Date(),
-      })
-      .where(and(eq(campaigns.id, id), eq(campaigns.userId, session.user.id)))
-      .returning();
+      },
+    });
 
-    if (!updatedCampaign) {
+    if (updatedCampaign.count === 0) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
-    return NextResponse.json(updatedCampaign);
+    // Fetch the updated campaign
+    const campaign = await db.campaign.findFirst({
+      where: {
+        id: id,
+        userId: session.user.id,
+      },
+    });
+
+    return NextResponse.json(campaign);
   } catch (error) {
     console.error("Error updating campaign:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -86,12 +96,14 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const [deletedCampaign] = await db
-      .delete(campaigns)
-      .where(and(eq(campaigns.id, id), eq(campaigns.userId, session.user.id)))
-      .returning();
+    const deletedCampaign = await db.campaign.deleteMany({
+      where: {
+        id: id,
+        userId: session.user.id,
+      },
+    });
 
-    if (!deletedCampaign) {
+    if (deletedCampaign.count === 0) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 

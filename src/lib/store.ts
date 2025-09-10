@@ -37,9 +37,9 @@ export const useUIStore = create<UIState>()(
 
 // Auth State Store
 interface AuthState {
-  user: any | null;
+  user: Record<string, unknown> | null;
   isLoading: boolean;
-  setUser: (user: any | null) => void;
+  setUser: (user: Record<string, unknown> | null) => void;
   setLoading: (loading: boolean) => void;
 }
 

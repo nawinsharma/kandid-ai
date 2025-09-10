@@ -1,21 +1,25 @@
-import { LoginForm } from "@/components/auth/login-form";
+"use client";
+
+import { useEffect } from "react";
+import { useAuthModalContext } from "@/components/providers/auth-modal-provider";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const { openAuthModal } = useAuthModalContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Open the auth modal in login mode
+    openAuthModal("login");
+    // Redirect to home page after opening modal
+    router.push("/");
+  }, [openAuthModal, router]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xl">
-              L
-            </div>
-          </div>
-          <h1 className="mt-4 text-3xl font-bold text-gray-900">LinkBird</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Your AI-powered LinkedIn outreach platform
-          </p>
-        </div>
-        <LoginForm />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-2 text-sm text-gray-600">Opening login...</p>
       </div>
     </div>
   );

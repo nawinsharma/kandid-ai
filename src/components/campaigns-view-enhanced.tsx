@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Search, Plus, Users, CheckCircle, Clock, XCircle, MessageSquare, TrendingUp, Target, Zap } from "lucide-react";
+import { Search, Plus, Users, TrendingUp, Target, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCampaigns } from "@/hooks/use-campaigns";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,27 +27,27 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
   }, [router]);
 
   const filteredCampaigns = useMemo(() => {
-    return campaigns?.filter((campaign: any) => {
-      const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return campaigns?.filter((campaign: Record<string, unknown>) => {
+      const matchesSearch = (campaign.name as string)?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "all" || campaign.status === statusFilter;
       return matchesSearch && matchesStatus;
     }) || [];
   }, [campaigns, searchQuery, statusFilter]);
 
   const sortedCampaigns = useMemo(() => {
-    return [...filteredCampaigns].sort((a: any, b: any) => {
+    return [...filteredCampaigns].sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
       let aValue = a[sortBy];
       let bValue = b[sortBy];
       
       if (sortBy === "responseRate") {
-        aValue = parseFloat(aValue || "0");
-        bValue = parseFloat(bValue || "0");
+        aValue = parseFloat((aValue as string) || "0");
+        bValue = parseFloat((bValue as string) || "0");
       }
       
       if (sortOrder === "asc") {
-        return aValue > bValue ? 1 : -1;
+        return (aValue as number) > (bValue as number) ? 1 : -1;
       } else {
-        return aValue < bValue ? 1 : -1;
+        return (aValue as number) < (bValue as number) ? 1 : -1;
       }
     });
   }, [filteredCampaigns, sortBy, sortOrder]);
@@ -55,9 +55,9 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
   // Calculate overall statistics
   const statistics = useMemo(() => {
     const totalCampaigns = campaigns?.length || 0;
-    const activeCampaigns = campaigns?.filter((c: any) => c.status === "active").length || 0;
-    const totalLeads = campaigns?.reduce((sum: number, c: any) => sum + (c.totalLeads || 0), 0) || 0;
-    const totalSuccessfulLeads = campaigns?.reduce((sum: number, c: any) => sum + (c.successfulLeads || 0), 0) || 0;
+    const activeCampaigns = campaigns?.filter((c: Record<string, unknown>) => c.status === "active").length || 0;
+    const totalLeads = campaigns?.reduce((sum: number, c: Record<string, unknown>) => sum + ((c.totalLeads as number) || 0), 0) || 0;
+    const totalSuccessfulLeads = campaigns?.reduce((sum: number, c: Record<string, unknown>) => sum + ((c.successfulLeads as number) || 0), 0) || 0;
     const overallResponseRate = totalLeads > 0 ? (totalSuccessfulLeads / totalLeads) * 100 : 0;
     
     return {
@@ -325,45 +325,45 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                     </tr>
                   ))
                 ) : (
-                  sortedCampaigns.map((campaign: any) => (
+                  sortedCampaigns.map((campaign: Record<string, unknown>) => (
                     <tr
-                      key={campaign.id}
+                      key={campaign.id as string}
                       className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => handleCampaignClick(campaign.id)}
+                      onClick={() => handleCampaignClick(campaign.id as string)}
                     >
                       <td className="py-4 px-6">
-                        <div className="font-medium text-gray-900">{campaign.name}</div>
+                        <div className="font-medium text-gray-900">{campaign.name as string}</div>
                       </td>
                       <td className="py-4 px-6">
-                        {getStatusBadge(campaign.status)}
+                        {getStatusBadge(campaign.status as string)}
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4 text-gray-400" />
-                          <span className="font-medium text-gray-900">{campaign.totalLeads || 0}</span>
+                          <span className="font-medium text-gray-900">{(campaign.totalLeads as number) || 0}</span>
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-900">
-                            {parseFloat(campaign.responseRate || "0").toFixed(1)}%
+                            {parseFloat((campaign.responseRate as string) || "0").toFixed(1)}%
                           </span>
                           <span className="text-sm text-gray-500">
-                            ({campaign.successfulLeads || 0}/{campaign.totalLeads || 0})
+                            ({(campaign.successfulLeads as number) || 0}/{(campaign.totalLeads as number) || 0})
                           </span>
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="w-24">
                           <Progress 
-                            value={parseFloat(campaign.responseRate || "0")} 
+                            value={parseFloat((campaign.responseRate as string) || "0")} 
                             className="h-2"
                           />
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <span className="text-sm text-gray-600">
-                          {new Date(campaign.createdAt).toLocaleDateString()}
+                          {new Date(campaign.createdAt as string).toLocaleDateString()}
                         </span>
                       </td>
                     </tr>

@@ -32,6 +32,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "hyugalife-2",
     name: "Hyugalife 2",
     status: "Active",
     totalLeads: 19,
@@ -42,6 +43,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "honeyveda",
     name: "Honeyveda",
     status: "Active",
     totalLeads: 3,
@@ -52,6 +54,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "hempstreet",
     name: "HempStreet",
     status: "Active",
     totalLeads: 7,
@@ -62,6 +65,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "healthyhey-2",
     name: "HealthyHey 2",
     status: "Active",
     totalLeads: 5,
@@ -72,6 +76,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "herbal-chakra",
     name: "Herbal Chakra",
     status: "Active",
     totalLeads: 19,
@@ -82,6 +87,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "healofy",
     name: "Healofy",
     status: "Active",
     totalLeads: 14,
@@ -92,6 +98,7 @@ const campaignsData = [
     connectionAccepted: 0,
   },
   {
+    id: "healthsense",
     name: "HealthSense",
     status: "Active",
     totalLeads: 2,

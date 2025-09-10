@@ -31,7 +31,7 @@ export function useCreateCampaign() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (campaignData: any) => {
+    mutationFn: async (campaignData: Record<string, unknown>) => {
       const response = await fetch("/api/campaigns", {
         method: "POST",
         headers: {
@@ -56,7 +56,7 @@ export function useUpdateCampaign() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...campaignData }: { id: string; [key: string]: any }) => {
+    mutationFn: async ({ id, ...campaignData }: { id: string; [key: string]: unknown }) => {
       const response = await fetch(`/api/campaigns/${id}`, {
         method: "PUT",
         headers: {

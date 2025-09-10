@@ -1,14 +1,10 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
-import { users } from "./db/schema";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg",
-    schema: {
-      users,
-    },
+  database: prismaAdapter(db, {
+    provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,
@@ -36,7 +32,15 @@ export const auth = betterAuth({
       },
     },
   },
+  // Add proper error handling
+  onAPIError: {
+    throw: true,
+    onError: (error, ctx) => {
+      console.error("Better Auth API Error:", error);
+      console.error("Context:", ctx);
+    },
+  },
 });
 
 export type Session = typeof auth.$Infer.Session;
-export type User = typeof auth.$Infer.User;
+export type User = typeof auth.$Infer.Session.user;

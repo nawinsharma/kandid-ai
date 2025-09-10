@@ -4,6 +4,7 @@ import type * as React from "react"
 import { Users, Megaphone, MessageSquare, Settings, Home, Linkedin, FileText } from "lucide-react"
 import { LogoutButton } from "@/components/logout-button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useAuthStore } from "@/lib/store"
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +24,7 @@ import {
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: Home,
   },
   {
@@ -53,6 +54,7 @@ const items = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
+  const { user } = useAuthStore()
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -66,24 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* User Profile Section */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <div className="flex items-center gap-3 px-4 py-3 border-b">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                <AvatarFallback className="bg-gray-200 text-gray-600">PE</AvatarFallback>
-              </Avatar>
-              {!isCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">Kandid</p>
-                  <p className="text-xs text-gray-500">Personal</p>
-                </div>
-              )}
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
         {/* Overview Section */}
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
@@ -152,21 +136,54 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="flex items-center gap-3 px-4 py-3 border-t">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder.svg?height=32&width=32" />
-            <AvatarFallback className="bg-blue-600 text-white">BK</AvatarFallback>
-          </Avatar>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900">Bhavya From Kand...</p>
-              <p className="text-xs text-gray-500">bhavya@kandid.ai</p>
+        {user ? (
+          <>
+            <div className="flex items-center gap-3 px-4 py-3 border-t">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={(user.image as string) || "/placeholder.svg?height=32&width=32"} />
+                <AvatarFallback className="bg-blue-600 text-white">
+                  {(user.name as string) ? (user.name as string).charAt(0).toUpperCase() : (user.email as string).charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {(user.name as string) || "User"}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {user.email as string}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        {!isCollapsed && (
-          <div className="px-4 pb-3">
-            <LogoutButton />
+            {!isCollapsed && (
+              <div className="px-4 pb-3">
+                <LogoutButton />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex items-center gap-3 px-4 py-3 border-t">
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="bg-gray-200 text-gray-600">?</AvatarFallback>
+            </Avatar>
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900">Not signed in</p>
+                <p className="text-xs text-gray-500">Please log in</p>
+                <button 
+                  onClick={() => {
+                    console.log("🔄 Manual auth refresh triggered");
+                    if ((window as Window & { refreshAuth?: () => void }).refreshAuth) {
+                      (window as Window & { refreshAuth?: () => void }).refreshAuth!();
+                    }
+                  }}
+                  className="text-xs text-blue-600 hover:underline mt-1"
+                >
+                  Refresh Auth
+                </button>
+              </div>
+            )}
           </div>
         )}
       </SidebarFooter>

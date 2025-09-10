@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, leads } from "@/lib/db";
+import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { eq, and, ilike, or, desc } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,47 +22,45 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build where conditions
-    const whereConditions = [eq(leads.userId, session.user.id)];
+    const whereConditions: Record<string, unknown> = {
+      userId: session.user.id,
+    };
 
     if (search) {
-      whereConditions.push(
-        or(
-          ilike(leads.name, `%${search}%`),
-          ilike(leads.email, `%${search}%`),
-          ilike(leads.company, `%${search}%`)
-        )!
-      );
+      whereConditions.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { company: { contains: search, mode: 'insensitive' } },
+      ];
     }
 
     if (status && status !== "all") {
-      whereConditions.push(eq(leads.status, status));
+      whereConditions.status = status;
     }
 
     if (campaignId) {
-      whereConditions.push(eq(leads.campaignId, campaignId));
+      whereConditions.campaignId = campaignId;
     }
 
-    const userLeads = await db
-      .select()
-      .from(leads)
-      .where(and(...whereConditions))
-      .orderBy(desc(leads.createdAt))
-      .limit(limit)
-      .offset(offset);
-
-    // Get total count for pagination
-    const [totalCount] = await db
-      .select({ count: leads.id })
-      .from(leads)
-      .where(and(...whereConditions));
+    const [userLeads, totalCount] = await Promise.all([
+      db.lead.findMany({
+        where: whereConditions,
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset,
+      }),
+      db.lead.count({
+        where: whereConditions,
+      }),
+    ]);
 
     return NextResponse.json({
       leads: userLeads,
       pagination: {
         page,
         limit,
-        total: totalCount?.count || 0,
-        totalPages: Math.ceil((totalCount?.count || 0) / limit),
+        total: totalCount,
+        totalPages: Math.ceil(totalCount / limit),
       },
     });
   } catch (error) {
@@ -88,7 +85,9 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
     };
 
-    const [lead] = await db.insert(leads).values(newLead).returning();
+    const lead = await db.lead.create({
+      data: newLead,
+    });
 
     return NextResponse.json(lead);
   } catch (error) {

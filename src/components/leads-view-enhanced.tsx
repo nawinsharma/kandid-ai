@@ -14,7 +14,7 @@ import { useUIStore } from "@/lib/store";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
-  const [selectedLead, setSelectedLead] = useState<any>(null);
+  const [selectedLead, setSelectedLead] = useState<Record<string, unknown> | null>(null);
   const { searchQuery, filterStatus, setSearchQuery, setFilterStatus } = useUIStore();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useLeads();
 
@@ -209,9 +209,9 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                     </tr>
                   ))
                 ) : (
-                  allLeads.map((lead: any) => (
+                  allLeads.map((lead: Record<string, unknown>) => (
                     <tr
-                      key={lead.id}
+                      key={lead.id as string}
                       className="hover:bg-gray-50 cursor-pointer"
                       onClick={() => setSelectedLead(lead)}
                     >
@@ -220,20 +220,20 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                           <Avatar className="h-10 w-10">
                             <AvatarImage src={`/placeholder-32px.png?height=40&width=40`} />
                             <AvatarFallback className="text-sm bg-gray-100 text-gray-600 font-medium">
-                              {lead.name?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "L"}
+                              {(lead.name as string)?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "L"}
                             </AvatarFallback>
                           </Avatar>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900">{lead.name}</p>
-                            <p className="text-xs text-muted-foreground truncate">{lead.title}</p>
+                            <p className="text-sm font-medium text-gray-900">{lead.name as string}</p>
+                            <p className="text-xs text-muted-foreground truncate">{lead.title as string}</p>
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-sm text-gray-600">{lead.campaign?.name || "N/A"}</span>
+                        <span className="text-sm text-gray-600">{(lead.campaign as Record<string, unknown>)?.name as string || "N/A"}</span>
                       </td>
-                      <td className="py-4 px-6">{renderActivityBars(lead.activity || 0)}</td>
-                      <td className="py-4 px-6">{getStatusBadge(lead.status, lead.status)}</td>
+                      <td className="py-4 px-6">{renderActivityBars((lead.activity as number) || 0)}</td>
+                      <td className="py-4 px-6">{getStatusBadge(lead.status as string, lead.status as string)}</td>
                     </tr>
                   ))
                 )}
@@ -266,7 +266,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
       {/* Lead Profile Panel */}
       {selectedLead && (
         <LeadProfilePanel
-          lead={selectedLead}
+          lead={selectedLead as Record<string, unknown> & { id: string; name: string; title: string; company: string; campaign: string; status: string; statusType: string; activity: number; avatar: string; lastContact: string | null }}
           isOpen={!!selectedLead}
           onClose={() => setSelectedLead(null)}
         />

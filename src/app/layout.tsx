@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Suspense } from "react";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { AuthModalProvider } from "@/components/providers/auth-modal-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <QueryProvider>
             <AuthProvider>
-              <SidebarProvider>{children}</SidebarProvider>
+              <AuthModalProvider>
+                <SidebarProvider>{children}</SidebarProvider>
+              </AuthModalProvider>
             </AuthProvider>
           </QueryProvider>
         </Suspense>

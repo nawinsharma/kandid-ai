@@ -30,6 +30,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "SM",
+    lastContact: null,
   },
   {
     id: "2",
@@ -41,6 +42,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "MS",
+    lastContact: null,
   },
   {
     id: "3",
@@ -52,6 +54,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "AP",
+    lastContact: null,
   },
   {
     id: "4",
@@ -63,6 +66,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "HH",
+    lastContact: null,
   },
   {
     id: "5",
@@ -74,6 +78,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "RO",
+    lastContact: null,
   },
   {
     id: "6",
@@ -85,6 +90,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "PG",
+    lastContact: null,
   },
   {
     id: "7",
@@ -96,6 +102,7 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "SS",
+    lastContact: null,
   },
   {
     id: "8",
@@ -107,10 +114,13 @@ const campaignLeads = [
     statusType: "pending",
     activity: 3,
     avatar: "MS",
+    lastContact: null,
   },
 ]
 
 export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
+  // campaignId is available for future use
+  console.log("Campaign ID:", campaignId);
   const [selectedLead, setSelectedLead] = useState<(typeof campaignLeads)[0] | null>(null)
   const [requestMessage, setRequestMessage] = useState(
     "Hi {{firstName}}, I'm building consultative AI salespersons for personal care brands with the guarantee to boost your b2c revenue by min of 2%. Would love to connect if you're open to exploring this for Just Herbs!",
