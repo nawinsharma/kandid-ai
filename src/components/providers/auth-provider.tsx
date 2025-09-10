@@ -9,13 +9,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = useCallback(async () => {
     try {
-      console.log("🔍 AuthProvider: Checking session...");
-      console.log("🔍 AuthProvider: Document cookies:", document.cookie);
       const session = await authClient.getSession();
-      console.log("🔍 AuthProvider: Session result:", session);
-      console.log("🔍 AuthProvider: Session data:", session.data);
-      console.log("🔍 AuthProvider: User data:", session.data?.user);
-      console.log("🔍 AuthProvider: Session error:", session.error);
       setUser(session.data?.user || null);
     } catch (error) {
       console.error("Auth check failed:", error);
@@ -30,13 +24,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // Listen for storage events to detect auth changes
     const handleStorageChange = () => {
-      console.log("🔍 AuthProvider: Storage change detected, rechecking session...");
       checkAuth();
     };
     
     // Listen for custom auth events
     const handleAuthChange = () => {
-      console.log("🔍 AuthProvider: Auth change event detected, rechecking session...");
       checkAuth();
     };
     
@@ -55,7 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [checkAuth]);
 
-  // Expose checkAuth function globally for manual refresh
   useEffect(() => {
     (window as Window & { refreshAuth?: () => void }).refreshAuth = checkAuth;
     return () => {

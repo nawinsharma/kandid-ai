@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Eye, EyeOff, Mail} from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -53,62 +54,55 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
     setError("");
 
     try {
-      console.log("🔐 Starting login process...");
-      console.log("📧 Email:", email);
       
       const result = await authClient.signIn.email({
         email,
         password,
       });
       
-      console.log("🔍 Login result:", result);
-      
       if (result.error) {
-        console.log("❌ Login failed with error:", result.error);
         // Provide more user-friendly error messages
+        let errorMessage = "";
         if (result.error.message?.includes("User not found") || result.error.message?.includes("Invalid email or password")) {
-          setError("Invalid email or password. Please check your credentials and try again.");
+          errorMessage = "Invalid email or password. Please check your credentials and try again.";
         } else if (result.error.message?.includes("Email not verified")) {
-          setError("Please verify your email address before signing in.");
+          errorMessage = "Please verify your email address before signing in.";
         } else {
-          setError(result.error.message || "Login failed. Please try again.");
+          errorMessage = result.error.message || "Login failed. Please try again.";
         }
+        
+        setError(errorMessage);
+        
+        // Show error toast
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+        });
       } else {
-        // Any successful response should trigger redirect
-        console.log("✅ Login successful! Starting redirect process...");
-        console.log("🔍 Login result:", result);
-        console.log("🔍 Login result data:", result.data);
-        console.log("🔍 Login result user:", result.data?.user);
-        console.log("🔄 Closing modal...");
+        // Show success toast
+        toast.success("Welcome back! You're now logged in.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        
         onClose();
         
         // Trigger auth change event to update auth state
-        console.log("🔔 Triggering auth change event...");
         window.dispatchEvent(new CustomEvent('auth-change'));
         
         // Also try to refresh auth state manually
         if ((window as Window & { refreshAuth?: () => void }).refreshAuth) {
-          console.log("🔄 Manually refreshing auth state...");
           (window as Window & { refreshAuth?: () => void }).refreshAuth!();
         }
         
-        console.log("⏰ Using immediate redirect...");
-        // Use immediate redirect without timeout
-        console.log("🚀 Executing immediate redirect via window.location.href");
-        // Force a hard redirect to bypass any caching issues
         window.location.href = "/dashboard";
         
         // Fallback redirect after 2 seconds
         setTimeout(() => {
-          console.log("🆘 Fallback redirect triggered");
           window.location.href = "/dashboard";
         }, 2000);
         
-        // Show manual redirect button after 3 seconds if still not redirected
-        setTimeout(() => {
-          console.log("🔘 Showing manual redirect button");
-          setShowRedirectButton(true);
-        }, 3000);
+   
       }
     } catch (error) {
       console.error("💥 Login error:", error);
@@ -137,38 +131,74 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         password,
       });
 
-      console.log("🔍 Registration result:", result);
 
       if (result.error) {
         // Provide more user-friendly error messages
+        let errorMessage = "";
         if (result.error.message?.includes("User already exists") || result.error.message?.includes("Email already exists")) {
-          setError("An account with this email already exists. Please try logging in instead.");
+          errorMessage = "An account with this email already exists. Please try logging in instead.";
         } else if (result.error.message?.includes("Invalid email")) {
-          setError("Please enter a valid email address.");
+          errorMessage = "Please enter a valid email address.";
         } else if (result.error.message?.includes("Password")) {
-          setError("Password must be at least 6 characters long.");
+          errorMessage = "Password must be at least 6 characters long.";
         } else {
-          setError(result.error.message || "Registration failed");
+          errorMessage = result.error.message || "Registration failed";
         }
+        
+        setError(errorMessage);
+        
+        // Show error toast
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+        });
       } else {
-        console.log("✅ Registration successful! Starting redirect process...");
-        console.log("🔄 Closing modal...");
-        onClose();
+        // Show success toast
+        toast.success("Account created successfully! Logging you in...", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         
-        // Trigger auth change event to update auth state
-        console.log("🔔 Triggering auth change event...");
-        window.dispatchEvent(new CustomEvent('auth-change'));
-        
-        // Also try to refresh auth state manually
-        if ((window as Window & { refreshAuth?: () => void }).refreshAuth) {
-          console.log("🔄 Manually refreshing auth state...");
-          (window as Window & { refreshAuth?: () => void }).refreshAuth!();
+        // Automatically log in the user after successful signup
+        try {
+          const loginResult = await authClient.signIn.email({
+            email,
+            password,
+          });
+          
+          if (loginResult.error) {
+            toast.error("Account created but login failed. Please try logging in manually.", {
+              position: "top-right",
+              autoClose: 5000,
+            });
+          } else {
+            console.log("✅ Auto-login successful!");
+            toast.success("Welcome! You're now logged in.", {
+              position: "top-right",
+              autoClose: 3000,
+            });
+            
+            // Close modal and redirect
+            onClose();
+            
+            // Trigger auth change event to update auth state
+            window.dispatchEvent(new CustomEvent('auth-change'));
+            
+            // Also try to refresh auth state manually
+            if ((window as Window & { refreshAuth?: () => void }).refreshAuth) {
+              (window as Window & { refreshAuth?: () => void }).refreshAuth!();
+            }
+            
+            // Redirect to dashboard
+            window.location.replace("/dashboard");
+          }
+        } catch (loginError) {
+          console.error("❌ Auto-login error:", loginError);
+          toast.error("Account created but login failed. Please try logging in manually.", {
+            position: "top-right",
+            autoClose: 5000,
+          });
         }
-        
-        console.log("⏰ Using immediate redirect...");
-        // Use immediate redirect without timeout
-        console.log("🚀 Executing immediate redirect via window.location.replace");
-        window.location.replace("/dashboard");
         
         // Fallback redirect after 2 seconds
         setTimeout(() => {
@@ -343,8 +373,8 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       </form>
 
       {showRedirectButton && (
-        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-sm text-green-800 mb-2">
+        <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+          <p className="text-sm text-green-800 dark:text-green-300 mb-2">
             Login successful! If you weren&apos;t redirected automatically, click below:
           </p>
           <Button
@@ -521,7 +551,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogOverlay className="bg-black/60 backdrop-blur-md" />
-      <DialogContent className="sm:max-w-md w-full mx-4 bg-white rounded-2xl shadow-xl border-0 p-8">
+      <DialogContent className="sm:max-w-md w-full mx-4 rounded-2xl shadow-xl border-0 p-8">
         <DialogTitle className="sr-only">
           {mode === "welcome" && "Authentication"}
           {mode === "login" && "Login"}

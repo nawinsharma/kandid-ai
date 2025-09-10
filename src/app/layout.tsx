@@ -7,6 +7,8 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { AuthModalProvider } from "@/components/providers/auth-modal-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +45,19 @@ export default function RootLayout({
               </AuthProvider>
             </QueryProvider>
           </Suspense>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            className="mt-16"
+          />
         </ThemeProvider>
       </body>
     </html>
