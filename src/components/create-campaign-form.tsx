@@ -66,7 +66,7 @@ export function CreateCampaignForm({ trigger }: CreateCampaignFormProps) {
           selectedAccounts: [],
         },
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to create campaign. Please try again.",

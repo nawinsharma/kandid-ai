@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChevronDown, CheckCircle, Clock, User, Ban, Send, TrendingUp, Target, Users, Zap } from "lucide-react"
+import { ChevronDown, CheckCircle, Clock, User, Ban, TrendingUp, Target, Users, Zap } from "lucide-react"
 import { useDashboard } from "@/hooks/use-dashboard"
 import { useRouter } from "next/navigation"
 
@@ -160,7 +160,7 @@ export function Dashboard() {
   }
 
   const { statistics, campaigns, linkedinAccounts, recentActivity } = data || {};
-  
+
   return (
     <div className="flex-1 space-y-8 p-6">
       {/* Statistics Cards */}
@@ -219,9 +219,9 @@ export function Dashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Campaigns</h2>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="text-sm"
                 onClick={() => router.push('/campaigns')}
               >
@@ -231,7 +231,7 @@ export function Dashboard() {
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
               <div className="divide-y divide-gray-100">
                 {campaigns?.length > 0 ? (
-                  campaigns.map((campaign: any) => (
+                  campaigns.map((campaign: { id: string; name: string; totalLeads: number; status: string }) => (
                     <div key={campaign.id} className="flex items-center justify-between px-6 py-4">
                       <div className="flex-1">
                         <span className="text-sm font-medium text-gray-900 dark:text-neutral-100">{campaign.name}</span>
@@ -264,7 +264,7 @@ export function Dashboard() {
               </div>
               <div className="divide-y divide-gray-100">
                 {linkedinAccounts?.length > 0 ? (
-                  linkedinAccounts.map((account: any) => (
+                  linkedinAccounts.map((account: { id: string; name: string; status: string; requestsSent: number; requestsLimit: number; progress: number }) => (
                     <div key={account.id} className="grid grid-cols-3 gap-4 items-center px-6 py-4">
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
@@ -280,7 +280,6 @@ export function Dashboard() {
                               <span className="text-white text-xs font-bold">in</span>
                             </div>
                           </div>
-                          <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.email}</p>
                         </div>
                       </div>
                       <div>
@@ -313,9 +312,9 @@ export function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Activity</h2>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="text-sm"
               onClick={() => router.push('/leads')}
             >
@@ -332,7 +331,7 @@ export function Dashboard() {
             </div>
             <div className="divide-y divide-gray-100 dark:divide-neutral-700">
               {recentActivity?.length > 0 ? (
-                recentActivity.slice(0, 8).map((activity: any) => (
+                recentActivity.slice(0, 8).map((activity: { id: string; name: string; title: string; campaign: string; statusType: string; profileImage?: string }) => (
                   <div key={activity.id} className="grid grid-cols-3 gap-4 items-center px-6 py-4 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-8 w-8">

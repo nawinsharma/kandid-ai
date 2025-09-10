@@ -120,7 +120,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           {/* Lead Header */}
           <div className="flex items-start gap-4 mb-6">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={(lead as any).profileImage || "/placeholder-32px.png?height=64&width=64"} />
+              <AvatarImage src={(lead as { profileImage?: string }).profileImage || "/placeholder-32px.png?height=64&width=64"} />
               <AvatarFallback className="text-lg bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">{lead.avatar}</AvatarFallback>
             </Avatar>
             <div className="flex-1">

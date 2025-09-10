@@ -2,13 +2,12 @@
 
 import { useState, useMemo, useCallback, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Search, Plus, Users, TrendingUp, Target, Zap } from "lucide-react";
+import { Search, Users, TrendingUp, Target, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCampaigns } from "@/hooks/use-campaigns";
 import { CreateCampaignForm } from "@/components/create-campaign-form";

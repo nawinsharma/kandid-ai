@@ -63,7 +63,7 @@ export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
         status: "pending",
         activity: 0,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to create lead. Please try again.",
@@ -163,7 +163,7 @@ export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
                 <SelectValue placeholder="Select a campaign" />
               </SelectTrigger>
               <SelectContent>
-                {campaigns?.map((campaign: any) => (
+                {campaigns?.map((campaign: { id: string; name: string }) => (
                   <SelectItem key={campaign.id} value={campaign.id}>
                     {campaign.name}
                   </SelectItem>
