@@ -1,36 +1,206 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Kandid AI - LinkedIn Outreach Platform
 
-## Getting Started
+A modern, AI-powered LinkedIn outreach platform built with Next.js 15, featuring comprehensive lead management, campaign tracking, and automated messaging capabilities.
 
-First, run the development server:
+## ✨ Features
+
+- 🔐 **Authentication**: Email/password and Google OAuth integration
+- 📊 **Dashboard**: Real-time campaign and lead analytics
+- 👥 **Lead Management**: Infinite scrolling, search, and filtering
+- 📈 **Campaign Tracking**: Progress monitoring and success metrics
+- 🎯 **LinkedIn Integration**: Account management and outreach automation
+- 📱 **Responsive Design**: Mobile-friendly interface
+- ⚡ **Performance**: Optimized with React.memo and database indexing
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Database**: PostgreSQL, Drizzle ORM
+- **Authentication**: Better Auth
+- **State Management**: Zustand, TanStack Query
+- **Deployment**: Vercel (recommended)
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ 
+- PostgreSQL database
+- Bun (recommended) or npm/yarn
+
+### 1. Clone and Install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd kandid-ai
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Database Configuration
+DATABASE_URL="postgresql://username:password@localhost:5432/kandid_ai"
 
-## Learn More
+# Better Auth Configuration
+BETTER_AUTH_SECRET="your-super-secret-key-here-make-it-long-and-random"
+BETTER_AUTH_URL="http://localhost:3000"
 
-To learn more about Next.js, take a look at the following resources:
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Next.js Configuration
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-nextauth-secret"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Database Setup
 
-## Deploy on Vercel
+```bash
+# Generate migrations
+bun run db:generate
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run migrations
+bun run db:migrate
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Seed with sample data (optional)
+bun run db:seed
+```
+
+### 4. Start Development Server
+
+```bash
+bun run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to see your application!
+
+## 📚 Available Scripts
+
+```bash
+# Development
+bun run dev          # Start development server
+bun run build        # Build for production
+bun run start        # Start production server
+bun run lint         # Run ESLint
+
+# Database
+bun run db:generate  # Generate migration files
+bun run db:migrate   # Apply migrations
+bun run db:studio    # Open database GUI
+bun run db:push      # Push schema (dev only)
+bun run db:seed      # Seed with sample data
+
+# Utilities
+bun run type-check   # TypeScript type checking
+```
+
+## 🗄️ Database Setup Options
+
+### Option 1: Local PostgreSQL
+```bash
+# Install PostgreSQL
+brew install postgresql  # macOS
+sudo apt install postgresql  # Ubuntu
+
+# Create database
+createdb kandid_ai
+```
+
+### Option 2: Docker
+```bash
+# Create docker-compose.yml (see DATABASE_SETUP.md)
+docker-compose up -d
+```
+
+### Option 3: Cloud Database
+- **Neon**: [neon.tech](https://neon.tech) (Free PostgreSQL)
+- **Supabase**: [supabase.com](https://supabase.com)
+- **Railway**: [railway.app](https://railway.app)
+
+## 📖 Documentation
+
+- [Database Setup Guide](./DATABASE_SETUP.md) - Comprehensive database setup
+- [API Documentation](./docs/api.md) - API endpoints and usage
+- [Component Library](./docs/components.md) - UI components reference
+
+## 🏗️ Project Structure
+
+```
+kandid-ai/
+├── src/
+│   ├── app/                 # Next.js app router
+│   │   ├── api/            # API routes
+│   │   ├── auth/           # Authentication pages
+│   │   ├── campaigns/      # Campaign pages
+│   │   └── leads/          # Lead pages
+│   ├── components/         # React components
+│   │   ├── ui/            # shadcn/ui components
+│   │   └── providers/     # Context providers
+│   ├── hooks/             # Custom React hooks
+│   ├── lib/               # Utilities and configurations
+│   │   ├── db/           # Database schema and connection
+│   │   └── auth.ts       # Authentication configuration
+│   └── middleware.ts      # Next.js middleware
+├── scripts/               # Setup and utility scripts
+├── drizzle.config.ts      # Drizzle ORM configuration
+└── package.json
+```
+
+## 🔧 Configuration
+
+### Database Schema
+The application uses the following main tables:
+- `users` - User accounts (managed by Better Auth)
+- `campaigns` - LinkedIn outreach campaigns
+- `leads` - Individual leads within campaigns
+- `linkedin_accounts` - Connected LinkedIn accounts
+
+### Authentication
+- Email/password authentication
+- Google OAuth integration
+- Protected routes with middleware
+- Session management
+
+### State Management
+- **Zustand**: UI state, search filters, selections
+- **TanStack Query**: Server state, caching, optimistic updates
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Other Platforms
+- **Railway**: One-click deployment with PostgreSQL
+- **Netlify**: Static site deployment
+- **Docker**: Containerized deployment
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is proprietary software. All rights reserved.
+
+## 🆘 Support
+
+For support and questions:
+- Check the [Documentation](./DATABASE_SETUP.md)
+- Open an [Issue](https://github.com/your-repo/issues)
+- Contact the development team
+
+---
+
+Built with ❤️ using Next.js, TypeScript, and modern web technologies.

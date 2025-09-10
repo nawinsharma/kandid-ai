@@ -1,0 +1,177 @@
+"use client"
+
+import type * as React from "react"
+import { Users, Megaphone, MessageSquare, Settings, Home, Linkedin, FileText } from "lucide-react"
+import { LogoutButton } from "@/components/logout-button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from "@/components/ui/sidebar"
+
+// Navigation items
+const items = [
+  {
+    title: "Dashboard",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Leads",
+    url: "/leads",
+    icon: Users,
+  },
+  {
+    title: "Campaign",
+    url: "/campaigns",
+    icon: Megaphone,
+  },
+  {
+    title: "Messages",
+    url: "/messages",
+    icon: MessageSquare,
+    badge: "10+",
+  },
+  {
+    title: "LinkedIn Accounts",
+    url: "/linkedin-accounts",
+    icon: Linkedin,
+  },
+]
+
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
+
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <div className={`flex items-center gap-2 px-4 py-2 ${isCollapsed ? "justify-center" : ""}`}>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
+            L
+          </div>
+          {!isCollapsed && <span className="font-semibold text-lg">LinkBird</span>}
+        </div>
+      </SidebarHeader>
+
+      <SidebarContent>
+        {/* User Profile Section */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <div className="flex items-center gap-3 px-4 py-3 border-b">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                <AvatarFallback className="bg-gray-200 text-gray-600">PE</AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900">Kandid</p>
+                  <p className="text-xs text-gray-500">Personal</p>
+                </div>
+              )}
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Overview Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Overview</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <a href={item.url} className="flex items-center gap-3">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                      {item.badge && !isCollapsed && (
+                        <span className="ml-auto bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Settings Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Settings</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Setting & Billing">
+                  <a href="/settings" className="flex items-center gap-3">
+                    <Settings className="h-4 w-4" />
+                    <span>Setting & Billing</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Admin Panel Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Activity logs">
+                  <a href="/admin/activity" className="flex items-center gap-3">
+                    <FileText className="h-4 w-4" />
+                    <span>Activity logs</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="User logs">
+                  <a href="/admin/users" className="flex items-center gap-3">
+                    <Users className="h-4 w-4" />
+                    <span>User logs</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <div className="flex items-center gap-3 px-4 py-3 border-t">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/placeholder.svg?height=32&width=32" />
+            <AvatarFallback className="bg-blue-600 text-white">BK</AvatarFallback>
+          </Avatar>
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900">Bhavya From Kand...</p>
+              <p className="text-xs text-gray-500">bhavya@kandid.ai</p>
+            </div>
+          )}
+        </div>
+        {!isCollapsed && (
+          <div className="px-4 pb-3">
+            <LogoutButton />
+          </div>
+        )}
+      </SidebarFooter>
+
+      <SidebarRail />
+    </Sidebar>
+  )
+}
