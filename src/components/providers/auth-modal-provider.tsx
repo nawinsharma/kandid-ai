@@ -2,6 +2,7 @@
 
 import { createContext, useContext, ReactNode } from "react";
 import { AuthModal } from "@/components/auth/auth-modal";
+import { BlurBackground } from "@/components/auth/blur-background";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 
 interface AuthModalContextType {
@@ -36,7 +37,9 @@ export function AuthModalProvider({ children }: AuthModalProviderProps) {
 
   return (
     <AuthModalContext.Provider value={{ openAuthModal, closeAuthModal }}>
-      {children}
+      <BlurBackground>
+        {children}
+      </BlurBackground>
       <AuthModal
         isOpen={isOpen}
         onClose={closeAuthModal}

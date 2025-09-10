@@ -39,6 +39,7 @@ export const leadSchema = z.object({
   title: z.string().optional(),
   company: z.string().max(255).optional(),
   linkedinUrl: z.string().url().optional(),
+  profileImage: z.string().url().optional(),
   status: z.enum(["pending", "contacted", "responded", "converted", "blocked"]).default("pending"),
   activity: z.number().int().min(0).max(5).default(0),
   lastContactDate: z.date().optional(),

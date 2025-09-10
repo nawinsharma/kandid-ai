@@ -103,6 +103,7 @@ model Lead {
   title              String?
   company            String?   @db.VarChar(255)
   linkedinUrl        String?   @map("linkedin_url")
+  profileImage       String?   @map("profile_image")
   status             String    @default("pending") @db.VarChar(50) // pending, contacted, responded, converted, blocked
   activity           Int       @default(0) // 1-5 scale
   lastContactDate    DateTime? @map("last_contact_date")

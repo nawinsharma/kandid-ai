@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Search, Plus, Users, TrendingUp, Target, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCampaigns } from "@/hooks/use-campaigns";
+import { CreateCampaignForm } from "@/components/create-campaign-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
@@ -121,10 +122,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
             Manage your campaigns and track their performance
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-          <Plus className="w-4 h-4 mr-2" />
-          Create Campaign
-        </Button>
+        <CreateCampaignForm />
       </div>
 
       {/* Statistics Cards */}

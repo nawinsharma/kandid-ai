@@ -550,8 +550,8 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-black/60 backdrop-blur-md" />
-      <DialogContent className="sm:max-w-md w-full mx-4 rounded-2xl shadow-xl border-0 p-8">
+      <DialogOverlay className="bg-black/20 backdrop-blur-md" />
+      <DialogContent className="sm:max-w-md w-full mx-4 rounded-2xl shadow-2xl border-0 p-8 bg-white dark:bg-neutral-900">
         <DialogTitle className="sr-only">
           {mode === "welcome" && "Authentication"}
           {mode === "login" && "Login"}

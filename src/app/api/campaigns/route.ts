@@ -16,9 +16,34 @@ export async function GET(request: NextRequest) {
       where: {
         userId: session.user.id,
       },
+      include: {
+        leads: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(userCampaigns);
+    // Calculate statistics for each campaign
+    const campaignsWithStats = userCampaigns.map(campaign => {
+      const totalLeads = campaign.leads.length;
+      const successfulLeads = campaign.leads.filter(lead => 
+        lead.status === 'responded' || lead.status === 'converted'
+      ).length;
+      const responseRate = totalLeads > 0 ? (successfulLeads / totalLeads) * 100 : 0;
+
+      return {
+        ...campaign,
+        totalLeads,
+        successfulLeads,
+        responseRate: responseRate.toFixed(2),
+        leads: undefined, // Remove the leads array from the response
+      };
+    });
+
+    return NextResponse.json(campaignsWithStats);
   } catch (error) {
     console.error("Error fetching campaigns:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

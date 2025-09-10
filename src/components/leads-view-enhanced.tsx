@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, MoreHorizontal, Loader2 } from "lucide-react";
 import { LeadProfilePanel } from "@/components/lead-profile-panel";
+import { CreateLeadForm } from "@/components/create-lead-form";
 import { useLeads } from "@/hooks/use-leads";
 import { useUIStore } from "@/lib/store";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -130,6 +131,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <CreateLeadForm />
           <Button variant="outline" size="sm">
             <Filter className="w-4 h-4 mr-2" />
             Filter
@@ -218,7 +220,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-10 w-10">
-                            <AvatarImage src={`/placeholder-32px.png?height=40&width=40`} />
+                            <AvatarImage src={(lead.profileImage as string) || `/placeholder-32px.png?height=40&width=40`} />
                             <AvatarFallback className="text-sm bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">
                               {(lead.name as string)?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "L"}
                             </AvatarFallback>
