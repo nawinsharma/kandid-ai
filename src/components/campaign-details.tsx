@@ -14,120 +14,112 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Users, Mail, MessageSquare, RotateCcw, ChevronDown, Info } from "lucide-react"
 import { LeadProfilePanel } from "@/components/lead-profile-panel"
+import { useCampaign } from "@/hooks/use-campaigns"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface CampaignDetailsProps {
   campaignId: string
 }
 
-const campaignLeads = [
-  {
-    id: "1",
-    name: "Sumeet Malhotra",
-    title: "Don't Stop When you tired Stop when you're tired",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "SM",
-    lastContact: null,
-  },
-  {
-    id: "2",
-    name: "Megha Sabhlok",
-    title: "Co-founder, Just Herbs (acquired by Mari)",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "MS",
-    lastContact: null,
-  },
-  {
-    id: "3",
-    name: "Archee P.",
-    title: "Content and Marketing Specialist at Just Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "AP",
-    lastContact: null,
-  },
-  {
-    id: "4",
-    name: "Hindustan Herbs",
-    title: "Co-Founder at Hindustan Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "HH",
-    lastContact: null,
-  },
-  {
-    id: "5",
-    name: "Ritika Ohri",
-    title: "Brand Manager- Marketing, Talent and Innovation at Just Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "RO",
-    lastContact: null,
-  },
-  {
-    id: "6",
-    name: "Praveen Kumar Gautam",
-    title: "Vice President - Offline Sales @ Just Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "PG",
-    lastContact: null,
-  },
-  {
-    id: "7",
-    name: "Shubham Saboo",
-    title: "Associated as C&F Agent & Superstockiest at Just Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "SS",
-    lastContact: null,
-  },
-  {
-    id: "8",
-    name: "Megha Sabhlok",
-    title: "Brand Director at Just Herbs",
-    company: "Just Herbs",
-    campaign: "Just Herbs",
-    status: "Pending",
-    statusType: "pending",
-    activity: 3,
-    avatar: "MS",
-    lastContact: null,
-  },
-]
+interface Lead {
+  id: string;
+  name: string;
+  email?: string;
+  title: string;
+  company: string;
+  linkedinUrl?: string;
+  profileImage?: string;
+  status: string;
+  activity: number;
+  lastContactDate?: string;
+  createdAt: string;
+  // Additional fields for LeadProfilePanel compatibility
+  campaign: string;
+  statusType: string;
+  avatar: string;
+  lastContact: string | null;
+}
+
+// Helper function to get status badge
+const getStatusBadge = (status: string) => {
+  const statusConfig = {
+    pending: { className: "bg-orange-50 text-orange-700 border-orange-200", label: "Pending" },
+    contacted: { className: "bg-blue-50 text-blue-700 border-blue-200", label: "Contacted" },
+    responded: { className: "bg-green-50 text-green-700 border-green-200", label: "Responded" },
+    converted: { className: "bg-purple-50 text-purple-700 border-purple-200", label: "Converted" },
+    blocked: { className: "bg-red-50 text-red-700 border-red-200", label: "Blocked" },
+  };
+  
+  const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
+  
+  return (
+    <Badge variant="secondary" className={config.className}>
+      {config.label}
+    </Badge>
+  );
+};
 
 export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
-  // campaignId is available for future use
-  console.log("Campaign ID:", campaignId);
-  const [selectedLead, setSelectedLead] = useState<(typeof campaignLeads)[0] | null>(null)
+  const { data: campaign, isLoading, error } = useCampaign(campaignId);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  
   const [requestMessage, setRequestMessage] = useState(
-    "Hi {{firstName}}, I'm building consultative AI salespersons for personal care brands with the guarantee to boost your b2c revenue by min of 2%. Would love to connect if you're open to exploring this for Just Herbs!",
-  )
+    campaign?.requestMessage || "Hi {{firstName}}, I'm building consultative AI salespersons for personal care brands with the guarantee to boost your b2c revenue by min of 2%. Would love to connect if you're open to exploring this for Just Herbs!",
+  );
   const [connectionMessage, setConnectionMessage] = useState(
-    "Awesome to connect, {{firstName}}! Allow me to explain Kandid a bit: So these are consultative salespersons that engage with visitors like an offline store salesperson does. It helps them with product recommendations based on their preferences/concerns. Here's a video to help you visualise it better: https://youtu.be/331XRg-vPo",
-  )
+    campaign?.connectionMessage || "Awesome to connect, {{firstName}}! Allow me to explain Kandid a bit: So these are consultative salespersons that engage with visitors like an offline store salesperson does. It helps them with product recommendations based on their preferences/concerns. Here's a video to help you visualise it better: https://youtu.be/331XRg-vPo",
+  );
+
+  // Update messages when campaign data loads
+  if (campaign && !requestMessage) {
+    setRequestMessage(campaign.requestMessage || "");
+  }
+  if (campaign && !connectionMessage) {
+    setConnectionMessage(campaign.connectionMessage || "");
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64 mt-2" />
+          </div>
+          <Skeleton className="h-6 w-16" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-12" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-600">Error loading campaign details. Please try again.</p>
+      </div>
+    );
+  }
+
+  if (!campaign) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-600">Campaign not found.</p>
+      </div>
+    );
+  }
 
   const availableFields = [
     { field: "{{fullName}}", description: "Full Name" },
@@ -192,11 +184,19 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900image.png dark:text-neutral-100">Campaign Details</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{campaign.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage and track your campaign performance</p>
         </div>
-        <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-          Active
+        <Badge variant="secondary" className={
+          campaign.status === 'active' 
+            ? "bg-green-50 text-green-700 border-green-200" 
+            : campaign.status === 'paused'
+            ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+            : campaign.status === 'completed'
+            ? "bg-blue-50 text-blue-700 border-blue-200"
+            : "bg-gray-50 text-gray-700 border-gray-200"
+        }>
+          {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
         </Badge>
       </div>
 
@@ -232,34 +232,34 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
                 <Users className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">20</div>
+                <div className="text-2xl font-bold">{campaign.statistics?.totalLeads || 0}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Request Sent</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Contacted</CardTitle>
                 <Mail className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">{campaign.statistics?.contactedLeads || 0}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Request Accepted</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Responded</CardTitle>
                 <MessageSquare className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">{campaign.statistics?.respondedLeads || 0}</div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Request Replied</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Converted</CardTitle>
                 <RotateCcw className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">{campaign.statistics?.convertedLeads || 0}</div>
               </CardContent>
             </Card>
           </div>
@@ -274,23 +274,23 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Leads Contacted</span>
-                    <span>0.0%</span>
+                    <span>{campaign.statistics?.contactRate || 0}%</span>
                   </div>
-                  <Progress value={0} className="h-2" />
+                  <Progress value={parseFloat(campaign.statistics?.contactRate || "0")} className="h-2" />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Acceptance Rate</span>
-                    <span>0.0%</span>
+                    <span>Response Rate</span>
+                    <span>{campaign.statistics?.responseRate || 0}%</span>
                   </div>
-                  <Progress value={0} className="h-2" />
+                  <Progress value={parseFloat(campaign.statistics?.responseRate || "0")} className="h-2" />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Reply Rate</span>
-                    <span>0.0%</span>
+                    <span>Conversion Rate</span>
+                    <span>{campaign.statistics?.conversionRate || 0}%</span>
                   </div>
-                  <Progress value={0} className="h-2" />
+                  <Progress value={parseFloat(campaign.statistics?.conversionRate || "0")} className="h-2" />
                 </div>
               </CardContent>
             </Card>
@@ -303,17 +303,25 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Start Date:</span>
-                  <span className="text-sm font-medium">02/09/2025</span>
+                  <span className="text-sm font-medium">{new Date(campaign.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Status:</span>
-                  <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                    Active
+                  <Badge variant="secondary" className={
+                    campaign.status === 'active' 
+                      ? "bg-green-50 text-green-700 border-green-200" 
+                      : campaign.status === 'paused'
+                      ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                      : campaign.status === 'completed'
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-gray-50 text-gray-700 border-gray-200"
+                  }>
+                    {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Conversion Rate:</span>
-                  <span className="text-sm font-medium">0.0%</span>
+                  <span className="text-sm font-medium">{campaign.statistics?.conversionRate || 0}%</span>
                 </div>
               </CardContent>
             </Card>
@@ -344,36 +352,50 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-neutral-700">
-                    {campaignLeads.map((lead) => (
-                      <tr
-                        key={lead.id}
-                        className="hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
-                        onClick={() => setSelectedLead(lead)}
-                      >
-                        <td className="py-4 px-6">
-                          <div className="flex items-center space-x-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage src={`/placeholder-32px.png?height=40&width=40`} />
-                              <AvatarFallback className="text-sm bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
-                                {lead.avatar}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{lead.name}</p>
+                    {campaign.leads && campaign.leads.length > 0 ? (
+                      campaign.leads.map((lead: Lead) => (
+                        <tr
+                          key={lead.id}
+                          className="hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+                          onClick={() => setSelectedLead({
+                            ...lead,
+                            title: lead.title || 'No title',
+                            company: lead.company || 'No company',
+                            campaign: campaign.name,
+                            statusType: lead.status,
+                            avatar: lead.name ? lead.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2) : '??',
+                            lastContact: lead.lastContactDate || null,
+                          })}
+                        >
+                          <td className="py-4 px-6">
+                            <div className="flex items-center space-x-3">
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage src={lead.profileImage || `/placeholder-32px.png?height=40&width=40`} />
+                                <AvatarFallback className="text-sm bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
+                                  {lead.name ? lead.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2) : '??'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{lead.name}</p>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className="text-sm text-gray-600 dark:text-neutral-400">{lead.title}</span>
-                        </td>
-                        <td className="py-4 px-6">{renderActivityBars(lead.activity)}</td>
-                        <td className="py-4 px-6">
-                          <Badge variant="secondary" className="bg-orange-50 text-orange-700 border-orange-200 text-xs">
-                            Pending
-                          </Badge>
+                          </td>
+                          <td className="py-4 px-6">
+                            <span className="text-sm text-gray-600 dark:text-neutral-400">{lead.title || 'No title'}</span>
+                          </td>
+                          <td className="py-4 px-6">{renderActivityBars(lead.activity || 0)}</td>
+                          <td className="py-4 px-6">
+                            {getStatusBadge(lead.status)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={4} className="py-8 px-6 text-center text-gray-500 dark:text-neutral-400">
+                          No leads found for this campaign.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>

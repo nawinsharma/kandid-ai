@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChevronDown, CheckCircle, Clock, User, Ban, TrendingUp, Target, Users, Zap } from "lucide-react"
+import { ChevronDown, CheckCircle, Clock, User } from "lucide-react"
 import { useDashboard } from "@/hooks/use-dashboard"
 import { useRouter } from "next/navigation"
 
@@ -13,40 +13,6 @@ export function Dashboard() {
   const router = useRouter();
   const { data, isLoading, error } = useDashboard();
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700 text-xs font-medium px-2 py-1">
-            Active
-          </Badge>
-        );
-      case "paused":
-        return (
-          <Badge className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-700 text-xs font-medium px-2 py-1">
-            Paused
-          </Badge>
-        );
-      case "draft":
-        return (
-          <Badge className="bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 border-gray-200 dark:border-neutral-600 text-xs font-medium px-2 py-1">
-            Draft
-          </Badge>
-        );
-      case "completed":
-        return (
-          <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
-            Completed
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 border-gray-200 dark:border-neutral-600 text-xs font-medium px-2 py-1">
-            {status}
-          </Badge>
-        );
-    }
-  };
 
   const getActivityStatusBadge = (statusType: string) => {
     switch (statusType) {
@@ -54,14 +20,14 @@ export function Dashboard() {
         return (
           <Badge className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-700 text-xs font-medium px-2 py-1">
             <Clock className="w-3 h-3 mr-1" />
-            Pending
+            Pending Approval
           </Badge>
         );
       case "contacted":
         return (
           <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 border-orange-200 dark:border-orange-700 text-xs font-medium px-2 py-1">
             <User className="w-3 h-3 mr-1" />
-            Contacted
+            Sent 7 mins ago
           </Badge>
         );
       case "responded":
@@ -81,8 +47,14 @@ export function Dashboard() {
       case "blocked":
         return (
           <Badge className="bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 border-gray-200 dark:border-neutral-600 text-xs font-medium px-2 py-1">
-            <Ban className="w-3 h-3 mr-1" />
-            Blocked
+            Do Not Contact
+          </Badge>
+        );
+      case "followup":
+        return (
+          <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
+            <span className="mr-1">✈️</span>
+            Followup 10 mins ago
           </Badge>
         );
       default:
@@ -98,7 +70,7 @@ export function Dashboard() {
     return (
       <div className="flex-1 space-y-8 p-6">
         <div className="text-center py-12">
-          <p className="text-red-600">Error loading dashboard data. Please try again.</p>
+          <p className="text-red-600 dark:text-red-400">Error loading dashboard data. Please try again.</p>
         </div>
       </div>
     );
@@ -159,66 +131,19 @@ export function Dashboard() {
     );
   }
 
-  const { statistics, campaigns, linkedinAccounts, recentActivity } = data || {};
+  const { campaigns, linkedinAccounts, recentActivity } = data || {};
 
   return (
     <div className="flex-1 space-y-8 p-6">
-      {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Total Campaigns</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{statistics?.totalCampaigns || 0}</p>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">{statistics?.activeCampaigns || 0} active</p>
-            </div>
-            <Target className="h-8 w-8 text-blue-500" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Total Leads</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{statistics?.totalLeads || 0}</p>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">{statistics?.successfulLeads || 0} successful</p>
-            </div>
-            <Users className="h-8 w-8 text-green-500" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Response Rate</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{statistics?.responseRate || 0}%</p>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">Overall success rate</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-purple-500" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">Active Rate</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-neutral-100">
-                {statistics?.totalCampaigns > 0 ? ((statistics.activeCampaigns / statistics.totalCampaigns) * 100).toFixed(1) : 0}%
-              </p>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">Campaigns running</p>
-            </div>
-            <Zap className="h-8 w-8 text-orange-500" />
-          </div>
-        </div>
-      </div>
-
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Dashboard</h1>
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column - Campaigns and LinkedIn Accounts stacked vertically */}
         <div className="space-y-6">
           {/* Campaigns Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Campaigns</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h2>
               <Button
                 variant="outline"
                 size="sm"
@@ -229,15 +154,16 @@ export function Dashboard() {
               </Button>
             </div>
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-neutral-700">
                 {campaigns?.length > 0 ? (
                   campaigns.map((campaign: { id: string; name: string; totalLeads: number; status: string }) => (
                     <div key={campaign.id} className="flex items-center justify-between px-6 py-4">
                       <div className="flex-1">
                         <span className="text-sm font-medium text-gray-900 dark:text-neutral-100">{campaign.name}</span>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400">{campaign.totalLeads} leads</p>
                       </div>
-                      {getStatusBadge(campaign.status)}
+                      <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700 text-xs font-medium px-2 py-1">
+                        Active
+                      </Badge>
                     </div>
                   ))
                 ) : (
@@ -262,7 +188,7 @@ export function Dashboard() {
                   <div>Requests</div>
                 </div>
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-neutral-700">
                 {linkedinAccounts?.length > 0 ? (
                   linkedinAccounts.map((account: { id: string; name: string; status: string; requestsSent: number; requestsLimit: number; progress: number }) => (
                     <div key={account.id} className="grid grid-cols-3 gap-4 items-center px-6 py-4">
@@ -280,12 +206,13 @@ export function Dashboard() {
                               <span className="text-white text-xs font-bold">in</span>
                             </div>
                           </div>
+                          <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.name.toLowerCase().replace(' ', '')}@gmail.com</p>
                         </div>
                       </div>
                       <div>
                         <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
                           <CheckCircle className="w-3 h-3 mr-1" />
-                          {account.status}
+                          Connected
                         </Badge>
                       </div>
                       <div className="space-y-2">
@@ -318,7 +245,7 @@ export function Dashboard() {
               className="text-sm"
               onClick={() => router.push('/leads')}
             >
-              All Leads <ChevronDown className="ml-2 h-4 w-4" />
+              Most Recent <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </div>
           <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">

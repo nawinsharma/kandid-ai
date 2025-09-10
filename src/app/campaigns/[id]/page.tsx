@@ -11,8 +11,37 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
+import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
+
 export default async function CampaignDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
+  // Fetch campaign name for breadcrumb
+  let campaignName = "Campaign";
+  try {
+    const session = await auth.api.getSession({
+      headers: new Headers(),
+    });
+    
+    if (session) {
+      const campaign = await db.campaign.findFirst({
+        where: {
+          id: id,
+          userId: session.user.id,
+        },
+        select: {
+          name: true,
+        },
+      });
+      
+      if (campaign) {
+        campaignName = campaign.name;
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching campaign name:", error);
+  }
   
   return (
     <>
@@ -29,7 +58,7 @@ export default async function CampaignDetailsPage({ params }: { params: Promise<
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Just Herbs</BreadcrumbPage>
+                  <BreadcrumbPage>{campaignName}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
