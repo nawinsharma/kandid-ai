@@ -48,7 +48,7 @@ export function LoginButton({
   if (user) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600 dark:text-neutral-400">
           {(user.name as string) || (user.email as string)}
         </span>
         <Button

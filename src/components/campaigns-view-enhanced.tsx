@@ -19,6 +19,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [activeTab, setActiveTab] = useState("all");
   
   const { data: campaigns, isLoading, error } = useCampaigns();
 
@@ -30,9 +31,18 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
     return campaigns?.filter((campaign: Record<string, unknown>) => {
       const matchesSearch = (campaign.name as string)?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "all" || campaign.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      
+      // Tab filtering
+      let matchesTab = true;
+      if (activeTab === "active") {
+        matchesTab = campaign.status === "active";
+      } else if (activeTab === "inactive") {
+        matchesTab = campaign.status !== "active";
+      }
+      
+      return matchesSearch && matchesStatus && matchesTab;
     }) || [];
-  }, [campaigns, searchQuery, statusFilter]);
+  }, [campaigns, searchQuery, statusFilter, activeTab]);
 
   const sortedCampaigns = useMemo(() => {
     return [...filteredCampaigns].sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
@@ -73,7 +83,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
     const statusConfig = {
       active: { className: "bg-green-50 text-green-700 border-green-200", label: "Active" },
       paused: { className: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Paused" },
-      draft: { className: "bg-gray-50 text-gray-700 border-gray-200", label: "Draft" },
+      draft: { className: "bg-neutral-50 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-600", label: "Draft" },
       completed: { className: "bg-blue-50 text-blue-700 border-blue-200", label: "Completed" },
     };
     
@@ -106,7 +116,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Campaigns</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Manage your campaigns and track their performance
           </p>
@@ -176,26 +186,41 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
 
       {/* Tabs and Search */}
       <div className="flex items-center justify-between">
-        <Tabs defaultValue="all" className="w-auto">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="all">All Campaigns</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="inactive">Inactive</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+          <TabsList className="grid w-full grid-cols-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+            >
+              All Campaigns
+            </TabsTrigger>
+            <TabsTrigger 
+              value="active" 
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+            >
+              Active
+            </TabsTrigger>
+            <TabsTrigger 
+              value="inactive" 
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+            >
+              Inactive
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
         <div className="flex items-center gap-4">
           <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 w-4 h-4" />
             <Input
               placeholder="Search campaigns..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-gray-200"
+              className="pl-10 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-48 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -214,11 +239,11 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-700">
                 <tr>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     <button
-                      className="flex items-center gap-2 hover:text-gray-700"
+                      className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-300"
                       onClick={() => {
                         if (sortBy === "name") {
                           setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -232,9 +257,9 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                       {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                     </button>
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     <button
-                      className="flex items-center gap-2 hover:text-gray-700"
+                      className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-300"
                       onClick={() => {
                         if (sortBy === "status") {
                           setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -248,9 +273,9 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                       {sortBy === "status" && (sortOrder === "asc" ? "↑" : "↓")}
                     </button>
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     <button
-                      className="flex items-center gap-2 hover:text-gray-700"
+                      className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-300"
                       onClick={() => {
                         if (sortBy === "totalLeads") {
                           setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -264,9 +289,9 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                       {sortBy === "totalLeads" && (sortOrder === "asc" ? "↑" : "↓")}
                     </button>
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     <button
-                      className="flex items-center gap-2 hover:text-gray-700"
+                      className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-300"
                       onClick={() => {
                         if (sortBy === "responseRate") {
                           setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -280,10 +305,10 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                       {sortBy === "responseRate" && (sortOrder === "asc" ? "↑" : "↓")}
                     </button>
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Progress</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">Progress</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     <button
-                      className="flex items-center gap-2 hover:text-gray-700"
+                      className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-300"
                       onClick={() => {
                         if (sortBy === "createdAt") {
                           setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -299,7 +324,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {isLoading ? (
                   // Loading skeleton
                   Array.from({ length: 5 }).map((_, index) => (
@@ -328,27 +353,27 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                   sortedCampaigns.map((campaign: Record<string, unknown>) => (
                     <tr
                       key={campaign.id as string}
-                      className="hover:bg-gray-50 cursor-pointer"
+                      className="hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
                       onClick={() => handleCampaignClick(campaign.id as string)}
                     >
                       <td className="py-4 px-6">
-                        <div className="font-medium text-gray-900">{campaign.name as string}</div>
+                        <div className="font-medium text-neutral-900 dark:text-neutral-100">{campaign.name as string}</div>
                       </td>
                       <td className="py-4 px-6">
                         {getStatusBadge(campaign.status as string)}
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-gray-400" />
-                          <span className="font-medium text-gray-900">{(campaign.totalLeads as number) || 0}</span>
+                          <Users className="w-4 h-4 text-gray-400 dark:text-neutral-500" />
+                          <span className="font-medium text-neutral-900 dark:text-neutral-100">{(campaign.totalLeads as number) || 0}</span>
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-neutral-900 dark:text-neutral-100">
                             {parseFloat((campaign.responseRate as string) || "0").toFixed(1)}%
                           </span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-neutral-500 dark:text-neutral-400">
                             ({(campaign.successfulLeads as number) || 0}/{(campaign.totalLeads as number) || 0})
                           </span>
                         </div>
@@ -362,7 +387,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-neutral-600 dark:text-neutral-400">
                           {new Date(campaign.createdAt as string).toLocaleDateString()}
                         </span>
                       </td>

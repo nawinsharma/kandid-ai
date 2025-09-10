@@ -83,7 +83,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
         );
       case "blocked":
         return (
-          <Badge variant="secondary" className="bg-gray-50 text-gray-700 border-gray-200 text-xs">
+          <Badge variant="secondary" className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-neutral-600 text-xs">
             Do Not Contact
           </Badge>
         );
@@ -124,7 +124,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Manage and track your leads across all campaigns
           </p>
@@ -143,16 +143,16 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
       {/* Search and Filter */}
       <div className="flex items-center gap-4">
         <div className="relative w-80">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 w-4 h-4" />
           <Input
             placeholder="Search leads..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-white border-gray-200"
+            className="pl-10 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100"
           />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-48 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -171,15 +171,15 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-700">
                 <tr>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Name</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Campaign Name</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Activity</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Status</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">Name</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">Campaign Name</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">Activity</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-neutral-500 dark:text-neutral-400">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {isLoading ? (
                   // Loading skeleton
                   Array.from({ length: 10 }).map((_, index) => (
@@ -212,25 +212,25 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                   allLeads.map((lead: Record<string, unknown>) => (
                     <tr
                       key={lead.id as string}
-                      className="hover:bg-gray-50 cursor-pointer"
+                      className="hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
                       onClick={() => setSelectedLead(lead)}
                     >
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-10 w-10">
                             <AvatarImage src={`/placeholder-32px.png?height=40&width=40`} />
-                            <AvatarFallback className="text-sm bg-gray-100 text-gray-600 font-medium">
+                            <AvatarFallback className="text-sm bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">
                               {(lead.name as string)?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "L"}
                             </AvatarFallback>
                           </Avatar>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900">{lead.name as string}</p>
+                            <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{lead.name as string}</p>
                             <p className="text-xs text-muted-foreground truncate">{lead.title as string}</p>
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-sm text-gray-600">{(lead.campaign as Record<string, unknown>)?.name as string || "N/A"}</span>
+                        <span className="text-sm text-neutral-600 dark:text-neutral-400">{(lead.campaign as Record<string, unknown>)?.name as string || "N/A"}</span>
                       </td>
                       <td className="py-4 px-6">{renderActivityBars((lead.activity as number) || 0)}</td>
                       <td className="py-4 px-6">{getStatusBadge(lead.status as string, lead.status as string)}</td>

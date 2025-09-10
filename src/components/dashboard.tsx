@@ -143,17 +143,17 @@ export function Dashboard() {
           {/* Campaigns Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">Campaigns</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h2>
               <Button variant="outline" size="sm" className="text-sm">
                 All Campaigns <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
               <div className="divide-y divide-gray-100">
                 {campaigns.map((campaign, index) => (
                   <div key={index} className="flex items-center justify-between px-6 py-4">
-                    <span className="text-sm font-medium text-gray-900">{campaign.name}</span>
-                    <Badge className="bg-green-100 text-green-800 border-green-200 text-xs font-medium px-2 py-1">
+                    <span className="text-sm font-medium text-gray-900 dark:text-neutral-100">{campaign.name}</span>
+                    <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700 text-xs font-medium px-2 py-1">
                       {campaign.status}
                     </Badge>
                   </div>
@@ -165,11 +165,11 @@ export function Dashboard() {
           {/* LinkedIn Accounts Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">LinkedIn Accounts</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">LinkedIn Accounts</h2>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg">
-              <div className="px-6 py-3 border-b border-gray-100">
-                <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
+              <div className="px-6 py-3 border-b border-gray-100 dark:border-neutral-700">
+                <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
                   <div>Account</div>
                   <div>Status</div>
                   <div>Requests</div>
@@ -181,31 +181,31 @@ export function Dashboard() {
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={`/generic-placeholder-graphic.png?height=40&width=40`} />
-                        <AvatarFallback className="text-sm bg-orange-100 text-orange-700 font-medium">
+                        <AvatarFallback className="text-sm bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200 font-medium">
                           {account.avatar}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
                         <div className="flex items-center space-x-1">
-                          <p className="text-sm font-medium text-gray-900">{account.name}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{account.name}</p>
                           <div className="w-4 h-4 bg-blue-600 rounded flex items-center justify-center">
                             <span className="text-white text-xs font-bold">in</span>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-500 truncate">{account.email}</p>
+                        <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.email}</p>
                       </div>
                     </div>
                     <div>
-                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
                         <CheckCircle className="w-3 h-3 mr-1" />
                         {account.status}
                       </Badge>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-gray-900">{account.requests}</span>
+                        <span className="font-medium text-gray-900 dark:text-neutral-100">{account.requests}</span>
                       </div>
-                      <Progress value={account.progress} className="h-2 bg-gray-100" />
+                      <Progress value={account.progress} className="h-2 bg-gray-100 dark:bg-neutral-700" />
                     </div>
                   </div>
                 ))}
@@ -217,56 +217,56 @@ export function Dashboard() {
         {/* Recent Activity Section - Takes full right side */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Activity</h2>
             <Button variant="outline" size="sm" className="text-sm">
               Most Recent <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg">
-            <div className="px-6 py-3 border-b border-gray-100">
-              <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
+            <div className="px-6 py-3 border-b border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-700">
+              <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
                 <div>Lead</div>
                 <div>Campaign</div>
                 <div>Status</div>
               </div>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-neutral-700">
               {recentActivity.slice(0, 8).map((activity, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4 items-center px-6 py-4">
+                <div key={index} className="grid grid-cols-3 gap-4 items-center px-6 py-4 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
                   <div className="flex items-center space-x-3">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={`/placeholder-32px.png?height=32&width=32`} />
-                      <AvatarFallback className="text-xs bg-gray-100 text-gray-600 font-medium">
+                      <AvatarFallback className="text-xs bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
                         {activity.avatar}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{activity.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{activity.title}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">{activity.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{activity.title}</p>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600">{activity.campaign}</div>
+                  <div className="text-sm text-gray-600 dark:text-neutral-400">{activity.campaign}</div>
                   <div>
                     {activity.statusType === "pending" && (
-                      <Badge className="bg-purple-100 text-purple-800 border-purple-200 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-700 text-xs font-medium px-2 py-1">
                         <Clock className="w-3 h-3 mr-1" />
                         Pending Approval
                       </Badge>
                     )}
                     {activity.statusType === "sent" && (
-                      <Badge className="bg-orange-100 text-orange-800 border-orange-200 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 border-orange-200 dark:border-orange-700 text-xs font-medium px-2 py-1">
                         <User className="w-3 h-3 mr-1" />
                         Sent 7 mins ago
                       </Badge>
                     )}
                     {activity.statusType === "blocked" && (
-                      <Badge className="bg-gray-100 text-gray-800 border-gray-200 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 border-gray-200 dark:border-neutral-600 text-xs font-medium px-2 py-1">
                         <Ban className="w-3 h-3 mr-1" />
                         Do Not Contact
                       </Badge>
                     )}
                     {activity.statusType === "followup" && (
-                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
                         <Send className="w-3 h-3 mr-1" />
                         Followup 10 mins ago
                       </Badge>

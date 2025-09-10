@@ -29,7 +29,7 @@ export function LogoutButton() {
       size="sm"
       onClick={handleLogout}
       disabled={isLoading}
-      className="w-full justify-start text-gray-600 hover:text-gray-900"
+      className="w-full justify-start"
     >
       {isLoading ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

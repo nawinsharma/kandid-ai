@@ -162,7 +162,7 @@ export function LeadsView() {
         )
       case "blocked":
         return (
-          <Badge variant="secondary" className="bg-gray-50 text-gray-700 border-gray-200 text-xs">
+          <Badge variant="secondary" className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-neutral-300 border-gray-200 dark:border-neutral-600 text-xs">
             Do Not Contact
           </Badge>
         )
@@ -191,7 +191,7 @@ export function LeadsView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage and track your leads across all campaigns</p>
         </div>
         <div className="flex items-center gap-2">
@@ -207,8 +207,8 @@ export function LeadsView() {
 
       {/* Search */}
       <div className="relative w-80">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        <Input placeholder="Search leads..." className="pl-10 bg-white border-gray-200" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 w-4 h-4" />
+        <Input placeholder="Search leads..." className="pl-10 bg-white dark:bg-neutral-700 border-gray-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100" />
       </div>
 
       {/* Leads Table */}
@@ -216,33 +216,33 @@ export function LeadsView() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-neutral-700 border-b">
                 <tr>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Name</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Campaign Name</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Activity</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500">Status</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500 dark:text-neutral-400">Name</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500 dark:text-neutral-400">Campaign Name</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500 dark:text-neutral-400">Activity</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-gray-500 dark:text-neutral-400">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {leadsData.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => setSelectedLead(lead)}>
+                  <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer" onClick={() => setSelectedLead(lead)}>
                     <td className="py-4 px-6">
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={`/placeholder-32px.png?height=40&width=40`} />
-                          <AvatarFallback className="text-sm bg-gray-100 text-gray-600 font-medium">
+                          <AvatarFallback className="text-sm bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
                             {lead.avatar}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-gray-900">{lead.name}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{lead.name}</p>
                           <p className="text-xs text-muted-foreground truncate">{lead.title}</p>
                         </div>
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="text-sm text-gray-600">{lead.campaign}</span>
+                      <span className="text-sm text-gray-600 dark:text-neutral-400">{lead.campaign}</span>
                     </td>
                     <td className="py-4 px-6">{renderActivityBars(lead.activity)}</td>
                     <td className="py-4 px-6">{getStatusBadge(lead.statusType, lead.status)}</td>

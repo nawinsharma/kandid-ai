@@ -204,14 +204,14 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
   const renderWelcomeScreen = () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">Continue with an account</h2>
-        <p className="text-sm text-gray-600">You must log in or register to continue.</p>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-neutral-100">Continue with an account</h2>
+        <p className="text-sm text-gray-600 dark:text-neutral-400">You must log in or register to continue.</p>
       </div>
 
       <div className="space-y-3">
         <Button
           variant="outline"
-          className="w-full h-12 text-gray-700 border-gray-300 hover:bg-gray-50"
+          className="w-full h-12 text-gray-700 dark:text-neutral-300 border-gray-300 dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700"
           onClick={handleGoogleAuth}
           disabled={isLoading}
         >
@@ -259,7 +259,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         </button>
       </div>
 
-      <div className="text-center text-xs text-gray-500">
+      <div className="text-center text-xs text-gray-500 dark:text-neutral-400">
         By continuing, you agree to our{" "}
         <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a> and{" "}
         <a href="#" className="text-blue-600 hover:underline">T&Cs</a>
@@ -272,7 +272,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       <div className="flex items-center space-x-4">
         <button
           onClick={() => handleModeChange("welcome")}
-          className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+          className="flex items-center text-sm text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-100"
         >
           <ArrowLeft className="mr-1 h-4 w-4" />
           Back
@@ -280,8 +280,8 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">Login with email</h2>
-        <p className="text-sm text-gray-600">Login using your email address.</p>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-neutral-100">Login with email</h2>
+        <p className="text-sm text-gray-600 dark:text-neutral-400">Login using your email address.</p>
       </div>
 
       {error && (
@@ -292,7 +292,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
 
       <form onSubmit={handleEmailLogin} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="login-email" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="login-email" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
             Email or Username
           </Label>
           <Input
@@ -308,7 +308,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="login-password" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="login-password" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
             Password
           </Label>
           <div className="relative">
@@ -325,7 +325,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -376,7 +376,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       <div className="flex items-center space-x-4">
         <button
           onClick={() => handleModeChange("welcome")}
-          className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+          className="flex items-center text-sm text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-100"
         >
           <ArrowLeft className="mr-1 h-4 w-4" />
           Back
@@ -384,8 +384,8 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">Register with email</h2>
-        <p className="text-sm text-gray-600">Register using your email address.</p>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-neutral-100">Register with email</h2>
+        <p className="text-sm text-gray-600 dark:text-neutral-400">Register using your email address.</p>
       </div>
 
       {error && (
@@ -397,7 +397,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       <form onSubmit={handleEmailRegister} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="register-firstname" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="register-firstname" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
               First Name
             </Label>
             <Input
@@ -412,7 +412,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="register-lastname" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="register-lastname" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
               Last Name
             </Label>
             <Input
@@ -429,7 +429,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="register-email" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="register-email" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
             Email
           </Label>
           <Input
@@ -445,7 +445,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="register-password" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="register-password" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
             Password
           </Label>
           <div className="relative">
@@ -463,7 +463,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -471,7 +471,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="register-confirm-password" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="register-confirm-password" className="text-sm font-medium text-gray-700 dark:text-neutral-300">
             Confirm Password
           </Label>
           <div className="relative">
@@ -489,7 +489,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400"
             >
               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>

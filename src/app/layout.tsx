@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { AuthModalProvider } from "@/components/providers/auth-modal-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,19 +29,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={null}>
-          <QueryProvider>
-            <AuthProvider>
-              <AuthModalProvider>
-                <SidebarProvider>{children}</SidebarProvider>
-              </AuthModalProvider>
-            </AuthProvider>
-          </QueryProvider>
-        </Suspense>
+        <ThemeProvider>
+          <Suspense fallback={null}>
+            <QueryProvider>
+              <AuthProvider>
+                <AuthModalProvider>
+                  <SidebarProvider>{children}</SidebarProvider>
+                </AuthModalProvider>
+              </AuthProvider>
+            </QueryProvider>
+          </Suspense>
+        </ThemeProvider>
       </body>
     </html>
   );

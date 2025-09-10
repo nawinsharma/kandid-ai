@@ -101,7 +101,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[400px] sm:w-[540px] p-0 overflow-y-auto">
+      <SheetContent className="w-[400px] sm:w-[540px] p-0 overflow-y-auto bg-white dark:bg-neutral-800">
         <SheetHeader className="p-6 pb-4 border-b">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-lg font-semibold">Lead Profile</SheetTitle>
@@ -121,22 +121,22 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           <div className="flex items-start gap-4 mb-6">
             <Avatar className="h-16 w-16">
               <AvatarImage src="/placeholder-32px.png?height=64&width=64" />
-              <AvatarFallback className="text-lg bg-gray-100 text-gray-600 font-medium">{lead.avatar}</AvatarFallback>
+              <AvatarFallback className="text-lg bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">{lead.avatar}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-xl font-semibold text-gray-900">{lead.name}</h3>
+                <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{lead.name}</h3>
                 <Button variant="ghost" size="sm" className="p-0 h-auto text-blue-600">
                   <ExternalLink className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-sm text-gray-600 mb-2">{lead.title}</p>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">{lead.title}</p>
+              <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400 mb-2">
                 <span>at {lead.company}, Author: रोग और मर्द</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <span className="w-2 h-2 bg-gray-300 rounded-full"></span>
+                <div className="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
+                  <span className="w-2 h-2 bg-neutral-300 dark:bg-neutral-600 rounded-full"></span>
                   <span>{lead.company}</span>
                 </div>
                 <Badge variant="secondary" className="bg-orange-50 text-orange-700 border-orange-200 text-xs">
@@ -150,15 +150,15 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           <div className="mb-6">
             <Button
               variant="ghost"
-              className="w-full justify-between p-0 h-auto text-sm text-gray-600 hover:bg-transparent"
+              className="w-full justify-between p-0 h-auto text-sm text-neutral-600 dark:text-neutral-400 hover:bg-transparent"
               onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
             >
               Additional Profile Info
               <ChevronDown className={`h-4 w-4 transition-transform ${showAdditionalInfo ? "rotate-180" : ""}`} />
             </Button>
             {showAdditionalInfo && (
-              <div className="mt-3 p-4 bg-gray-50 rounded-lg">
-                <div className="space-y-2 text-sm text-gray-600">
+              <div className="mt-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
+                <div className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
                   <p>
                     <span className="font-medium">Location:</span> India
                   </p>
@@ -189,11 +189,11 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
                   </div>
                   <div className="flex-1 min-w-0 pb-2">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-sm font-medium text-gray-900">{item.title}</h4>
-                      {item.time && <span className="text-xs text-gray-500 flex-shrink-0 ml-2">{item.time}</span>}
+                      <h4 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{item.title}</h4>
+                      {item.time && <span className="text-xs text-neutral-500 dark:text-neutral-400 flex-shrink-0 ml-2">{item.time}</span>}
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-3 mb-2">
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                    <div className="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-3 mb-2">
+                      <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {item.message.length > 100 && !item.hasMore
                           ? `${item.message.substring(0, 100)}...`
                           : item.message}
@@ -206,7 +206,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
                     )}
                     {item.type === "replied" && item.hasReply === false && (
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs text-gray-500">No reply</span>
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">No reply</span>
                         <Button variant="outline" size="sm" className="text-xs h-6 bg-transparent">
                           View Reply
                         </Button>

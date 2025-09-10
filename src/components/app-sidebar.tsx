@@ -5,6 +5,8 @@ import { Users, Megaphone, MessageSquare, Settings, Home, Linkedin, FileText } f
 import { LogoutButton } from "@/components/logout-button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuthStore } from "@/lib/store"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { usePathname } from "next/navigation"
 import {
   Sidebar,
   SidebarContent,
@@ -55,6 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
   const { user } = useAuthStore()
+  const pathname = usePathname()
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -63,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
             L
           </div>
-          {!isCollapsed && <span className="font-semibold text-lg">LinkBird</span>}
+          {!isCollapsed && <span className="font-semibold text-lg text-gray-900 dark:text-neutral-100">LinkBird</span>}
         </div>
       </SidebarHeader>
 
@@ -73,21 +76,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url} className="flex items-center gap-3">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                      {item.badge && !isCollapsed && (
-                        <span className="ml-auto bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-                          {item.badge}
-                        </span>
-                      )}
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                const isActive = pathname === item.url || (item.url === "/campaigns" && pathname.startsWith("/campaigns"))
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                      <a href={item.url} className="flex items-center gap-3">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                        {item.badge && !isCollapsed && (
+                          <span className="ml-auto bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                            {item.badge}
+                          </span>
+                        )}
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -98,7 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Setting & Billing">
+                <SidebarMenuButton asChild tooltip="Setting & Billing" isActive={pathname === "/settings"}>
                   <a href="/settings" className="flex items-center gap-3">
                     <Settings className="h-4 w-4" />
                     <span>Setting & Billing</span>
@@ -115,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Activity logs">
+                <SidebarMenuButton asChild tooltip="Activity logs" isActive={pathname === "/admin/activity"}>
                   <a href="/admin/activity" className="flex items-center gap-3">
                     <FileText className="h-4 w-4" />
                     <span>Activity logs</span>
@@ -123,7 +129,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="User logs">
+                <SidebarMenuButton asChild tooltip="User logs" isActive={pathname === "/admin/users"}>
                   <a href="/admin/users" className="flex items-center gap-3">
                     <Users className="h-4 w-4" />
                     <span>User logs</span>
@@ -147,14 +153,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </Avatar>
               {!isCollapsed && (
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">
                     {(user.name as string) || "User"}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">
                     {user.email as string}
                   </p>
                 </div>
               )}
+              <ThemeToggle />
             </div>
             {!isCollapsed && (
               <div className="px-4 pb-3">
@@ -165,12 +172,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ) : (
           <div className="flex items-center gap-3 px-4 py-3 border-t">
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-gray-200 text-gray-600">?</AvatarFallback>
+              <AvatarFallback className="bg-gray-200 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300">?</AvatarFallback>
             </Avatar>
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900">Not signed in</p>
-                <p className="text-xs text-gray-500">Please log in</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">Not signed in</p>
+                <p className="text-xs text-gray-500 dark:text-neutral-400">Please log in</p>
                 <button 
                   onClick={() => {
                     console.log("🔄 Manual auth refresh triggered");
@@ -178,12 +185,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       (window as Window & { refreshAuth?: () => void }).refreshAuth!();
                     }
                   }}
-                  className="text-xs text-blue-600 hover:underline mt-1"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-1"
                 >
                   Refresh Auth
                 </button>
               </div>
             )}
+            <ThemeToggle />
           </div>
         )}
       </SidebarFooter>

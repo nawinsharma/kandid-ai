@@ -3,6 +3,17 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export function Loading() {
   return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-900">
+      <div className="text-center space-y-6 max-w-md mx-auto px-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+        <p className="text-gray-600 dark:text-neutral-400">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export function LoadingTable() {
+  return (
     <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
       {/* Header skeleton */}
       <div className="space-y-2">
@@ -40,7 +51,7 @@ export function Loading() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-neutral-700 border-b">
                 <tr>
                   {Array.from({ length: 5 }).map((_, index) => (
                     <th key={index} className="text-left py-4 px-6">
