@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
-import { CampaignsViewEnhanced } from "@/components/campaigns-view-enhanced"
+import { CampaignsView } from "@/components/campaigns-view"
 import { Separator } from "@/components/ui/separator"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb"
 
@@ -26,7 +26,7 @@ export default function CampaignsPage() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-2 sm:p-4 pt-0">
-          <CampaignsViewEnhanced />
+          <CampaignsView />
         </div>
       </SidebarInset>
     </>

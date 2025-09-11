@@ -1,17 +1,49 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChevronDown, CheckCircle, Clock, User } from "lucide-react"
+import { CheckCircle, Clock, User } from "lucide-react"
 import { useDashboard } from "@/hooks/use-dashboard"
 import { useRouter } from "next/navigation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export function Dashboard() {
   const router = useRouter();
   const { data, isLoading, error } = useDashboard();
+
+  const { campaigns, linkedinAccounts, recentActivity } = data || {};
+
+  const [campaignStatusFilter, setCampaignStatusFilter] = useState<string>("all")
+  const [activityFilter, setActivityFilter] = useState<string>("most_recent")
+
+  const filteredCampaigns = useMemo(() => {
+    if (!campaigns) return []
+    if (campaignStatusFilter === "all") return campaigns
+    return campaigns.filter((c: { status: string }) => c.status === campaignStatusFilter)
+  }, [campaigns, campaignStatusFilter])
+
+  const processedRecentActivity = useMemo(() => {
+    if (!recentActivity) return []
+    if (activityFilter === "most_recent") {
+      return [...recentActivity].sort((a: { updatedAt?: string }, b: { updatedAt?: string }) => {
+        const aTime = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+        const bTime = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+        return bTime - aTime
+      })
+    }
+    if (activityFilter === "oldest") {
+      return [...recentActivity].sort((a: { updatedAt?: string }, b: { updatedAt?: string }) => {
+        const aTime = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+        const bTime = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+        return aTime - bTime
+      })
+    }
+    return recentActivity.filter((ra: { statusType: string }) => ra.statusType === activityFilter)
+  }, [recentActivity, activityFilter])
 
 
   const getActivityStatusBadge = (statusType: string) => {
@@ -131,8 +163,6 @@ export function Dashboard() {
     );
   }
 
-  const { campaigns, linkedinAccounts, recentActivity } = data || {};
-
   return (
     <div className="flex-1 space-y-4 sm:space-y-8 p-2 sm:p-6">
       <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100 hidden sm:block">Dashboard</h1>
@@ -144,19 +174,32 @@ export function Dashboard() {
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h2>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs sm:text-sm hidden sm:flex"
-                onClick={() => router.push('/campaigns')}
-              >
-                All Campaigns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
+              <div className="hidden sm:flex items-center gap-2">
+                <Select value={campaignStatusFilter} onValueChange={setCampaignStatusFilter}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Filter status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Campaigns</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="paused">Paused</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs sm:text-sm"
+                  onClick={() => router.push('/campaigns')}
+                >
+                  View All
+                </Button>
+              </div>
             </div>
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
               <div className="divide-y divide-gray-100 dark:divide-neutral-700">
-                {campaigns?.length > 0 ? (
-                  campaigns.map((campaign: { id: string; name: string; totalLeads: number; status: string }) => (
+                {filteredCampaigns?.length > 0 ? (
+                  filteredCampaigns.map((campaign: { id: string; name: string; totalLeads: number; status: string }) => (
                     <div key={campaign.id} className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4">
                       <div className="flex-1 min-w-0">
                         <span className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">{campaign.name}</span>
@@ -245,14 +288,30 @@ export function Dashboard() {
         <div className="space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Activity</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs sm:text-sm hidden sm:flex"
-              onClick={() => router.push('/leads')}
-            >
-              Most Recent <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="hidden sm:flex items-center gap-2">
+              <Select value={activityFilter} onValueChange={setActivityFilter}>
+                <SelectTrigger className="w-44">
+                  <SelectValue placeholder="Sort / filter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="most_recent">Most Recent</SelectItem>
+                  <SelectItem value="oldest">Oldest</SelectItem>
+                  <SelectItem value="responded">Responded</SelectItem>
+                  <SelectItem value="converted">Converted</SelectItem>
+                  <SelectItem value="contacted">Contacted</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="blocked">Blocked</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+                onClick={() => router.push('/leads')}
+              >
+                View Leads
+              </Button>
+            </div>
           </div>
           <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
             <div className="px-3 sm:px-6 py-3 border-b border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-700">
@@ -263,8 +322,8 @@ export function Dashboard() {
               </div>
             </div>
             <div className="divide-y divide-gray-100 dark:divide-neutral-700">
-              {recentActivity?.length > 0 ? (
-                recentActivity.slice(0, 8).map((activity: { id: string; name: string; title: string; campaign: string; statusType: string; profileImage?: string }) => (
+              {processedRecentActivity?.length > 0 ? (
+                processedRecentActivity.slice(0, 8).map((activity: { id: string; name: string; title: string; campaign: string; statusType: string; profileImage?: string }) => (
                   <div key={activity.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center px-3 sm:px-6 py-3 sm:py-4 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
                     <div className="flex items-center space-x-2 sm:space-x-3">
                       <Avatar className="h-7 w-7 sm:h-8 sm:w-8">

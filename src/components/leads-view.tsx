@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, memo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,7 @@ import { LeadProfilePanel } from "@/components/lead-profile-panel";
 import { useLeads } from "@/hooks/use-leads";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
+function LeadsView() {
   const [selectedLead, setSelectedLead] = useState<Record<string, unknown> | null>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useLeads();
 
@@ -257,6 +257,8 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
       )}
     </div>
   );
-});
+}
 
-export { LeadsViewEnhanced };
+export { LeadsView };
+
+

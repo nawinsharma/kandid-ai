@@ -12,21 +12,17 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !isLoading) {
-      // Redirect to dashboard if user is authenticated
       router.push("/dashboard");
     } else if (!user && !isLoading) {
-      // Show login modal if user is not authenticated
-      openAuthModal("welcome");
+      openAuthModal("login");
     }
   }, [user, isLoading, router, openAuthModal]);
 
-  // Always show loading state while checking authentication
+  if (isLoading) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
-        <p className="text-gray-600 dark:text-neutral-400 text-sm sm:text-base">Loading...</p>
-      </div>
-    </div>
+    <div />
   );
 }

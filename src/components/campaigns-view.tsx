@@ -1,45 +1,39 @@
 "use client";
 
-import { useState, useMemo, useCallback, memo } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { Search, Users, Clock, X, MessageSquare, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCampaigns } from "@/hooks/use-campaigns";
 import { CreateCampaignForm } from "@/components/create-campaign-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
+const CampaignsView = function CampaignsView() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   
   const { data: campaigns, isLoading, error } = useCampaigns();
 
-  const handleCampaignClick = useCallback((campaignId: string) => {
+  const handleCampaignClick = (campaignId: string) => {
     router.push(`/campaigns/${campaignId}`);
-  }, [router]);
+  };
 
-  const filteredCampaigns = useMemo(() => {
-    return campaigns?.filter((campaign: Record<string, unknown>) => {
-      const matchesSearch = (campaign.name as string)?.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      // Tab filtering
-      let matchesTab = true;
-      if (activeTab === "active") {
-        matchesTab = campaign.status === "active";
-      } else if (activeTab === "inactive") {
-        matchesTab = campaign.status !== "active";
-      }
-      
-      return matchesSearch && matchesTab;
-    }) || [];
-  }, [campaigns, searchQuery, activeTab]);
+  const filteredCampaigns = campaigns?.filter((campaign: Record<string, unknown>) => {
+    const matchesSearch = (campaign.name as string)?.toLowerCase().includes(searchQuery.toLowerCase());
+    let matchesTab = true;
+    if (activeTab === "active") {
+      matchesTab = campaign.status === "active";
+    } else if (activeTab === "inactive") {
+      matchesTab = campaign.status !== "active";
+    }
+    return matchesSearch && matchesTab;
+  }) || [];
 
-  const getStatusBadge = useCallback((status: string) => {
+  const getStatusBadge = (status: string) => {
     const statusConfig = {
       active: { className: "bg-green-50 text-green-700 border-green-200", label: "Active" },
       paused: { className: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Paused" },
@@ -54,7 +48,7 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
         {config.label}
       </Badge>
     );
-  }, []);
+  };
 
   if (error) {
     return (
@@ -277,6 +271,6 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
       </Card>
     </div>
   );
-});
+};
 
-export { CampaignsViewEnhanced };
+export { CampaignsView };

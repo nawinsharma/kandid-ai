@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Suspense } from "react";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { AuthModalProvider } from "@/components/providers/auth-modal-provider";
@@ -36,15 +35,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <Suspense fallback={null}>
-            <QueryProvider>
-              <AuthProvider>
-                <AuthModalProvider>
-                  <SidebarProvider>{children}</SidebarProvider>
-                </AuthModalProvider>
-              </AuthProvider>
-            </QueryProvider>
-          </Suspense>
+          <QueryProvider>
+            <AuthProvider>
+              <AuthModalProvider>
+                <SidebarProvider>{children}</SidebarProvider>
+              </AuthModalProvider>
+            </AuthProvider>
+          </QueryProvider>
           <ToastContainer
             position="top-right"
             autoClose={5000}

@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
-import { LeadsViewEnhanced } from "@/components/leads-view-enhanced"
+import { LeadsView } from "@/components/leads-view"
 import { Separator } from "@/components/ui/separator"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb"
 
@@ -26,7 +26,7 @@ export default function LeadsPage() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-2 sm:p-4 pt-0">
-          <LeadsViewEnhanced />
+          <LeadsView />
         </div>
       </SidebarInset>
     </>
