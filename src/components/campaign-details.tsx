@@ -537,39 +537,27 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
                     <Input id="campaign-name" defaultValue="Just Herbs" className="max-w-md bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100" />
                   </div>
 
-                  <div className="flex items-center justify-between py-2">
-                    <div className="space-y-1">
-                      <Label htmlFor="campaign-status" className="text-gray-700 dark:text-neutral-300">Campaign Status</Label>
-                      <p className="text-sm text-muted-foreground dark:text-neutral-400">Enable or disable this campaign</p>
-                    </div>
-                    <Switch id="campaign-status" defaultChecked />
+                  <div className="flex items-center gap-3 py-2">
+                    <Label htmlFor="campaign-status" className="text-gray-700 dark:text-neutral-300">Campaign Status</Label>
+                    <Switch id="campaign-status" defaultChecked className="data-[state=checked]:bg-blue-600" />
                   </div>
 
-                  <div className="flex items-center justify-between py-2">
-                    <div className="space-y-1">
-                      <Label htmlFor="personalization" className="text-gray-700 dark:text-neutral-300">Request without personalization</Label>
-                      <p className="text-sm text-muted-foreground dark:text-neutral-400">Send requests without personalized messages</p>
-                    </div>
-                    <Switch id="personalization" defaultChecked />
+                  <div className="flex items-center gap-3 py-2">
+                    <Label htmlFor="personalization" className="text-gray-700 dark:text-neutral-300">Request without personalization</Label>
+                    <Switch id="personalization" defaultChecked className="data-[state=checked]:bg-blue-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-100">AutoPilot Mode</CardTitle>
-                <p className="text-sm text-muted-foreground dark:text-neutral-400">
-                  Let the system automatically manage LinkedIn account assignments
-                </p>
-              </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between py-2">
+                <div className="flex items-center justify-between gap-3 py-2">
                   <div className="space-y-1">
-                    <Label htmlFor="autopilot" className="text-gray-700 dark:text-neutral-300">Enable AutoPilot</Label>
-                    <p className="text-sm text-muted-foreground dark:text-neutral-400">Automatically assign leads to available accounts</p>
+                    <Label htmlFor="autopilot" className="text-gray-700 dark:text-neutral-300">AutoPilot Mode</Label>
+                    <p className="text-sm text-muted-foreground dark:text-neutral-400">Let the system automatically manage LinkedIn account assignments</p>
                   </div>
-                  <Switch id="autopilot" />
+                  <Switch id="autopilot" className="data-[state=checked]:bg-blue-600" />
                 </div>
 
                 <div className="space-y-2">

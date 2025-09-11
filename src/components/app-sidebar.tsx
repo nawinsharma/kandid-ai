@@ -153,7 +153,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 const isActive = pathname === item.url || (item.url === "/campaigns" && pathname.startsWith("/campaigns"))
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
                       <a href={item.url} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
@@ -180,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 const isActive = pathname === item.url
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
                       <a href={item.url} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
@@ -202,7 +202,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 const isActive = pathname === item.url
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
                       <a href={item.url} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>

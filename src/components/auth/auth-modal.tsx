@@ -501,6 +501,32 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
           </div>
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="register-confirm-password" className="text-sm font-medium text-gray-700">
+            Confirm Password
+          </Label>
+          <div className="relative">
+            <Input
+              id="register-confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="h-12 pr-10"
+              required
+              minLength={6}
+              autoComplete="new-password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
         <Button
           type="submit"
           className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white"
