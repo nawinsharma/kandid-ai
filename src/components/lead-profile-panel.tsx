@@ -101,10 +101,10 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[400px] sm:w-[540px] p-0 overflow-y-auto bg-white dark:bg-neutral-800">
-        <SheetHeader className="p-6 pb-4 border-b">
+      <SheetContent className="w-full sm:w-[400px] md:w-[540px] p-0 overflow-y-auto bg-white dark:bg-neutral-800">
+        <SheetHeader className="p-4 sm:p-6 pb-4 border-b">
           <div className="flex items-center justify-between">
-            <SheetTitle className="text-lg font-semibold">Lead Profile</SheetTitle>
+            <SheetTitle className="text-base sm:text-lg font-semibold">Lead Profile</SheetTitle>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm">
                 <Trash2 className="h-4 w-4 text-red-500" />
@@ -116,28 +116,28 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           </div>
         </SheetHeader>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Lead Header */}
-          <div className="flex items-start gap-4 mb-6">
-            <Avatar className="h-16 w-16">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
               <AvatarImage src={(lead as { profileImage?: string }).profileImage || "/placeholder-32px.png?height=64&width=64"} />
-              <AvatarFallback className="text-lg bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">{lead.avatar}</AvatarFallback>
+              <AvatarFallback className="text-sm sm:text-lg bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">{lead.avatar}</AvatarFallback>
             </Avatar>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{lead.name}</h3>
-                <Button variant="ghost" size="sm" className="p-0 h-auto text-blue-600">
+                <h3 className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-neutral-100 truncate">{lead.name}</h3>
+                <Button variant="ghost" size="sm" className="p-0 h-auto text-blue-600 flex-shrink-0">
                   <ExternalLink className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">{lead.title}</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2 truncate">{lead.title}</p>
               <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400 mb-2">
-                <span>at {lead.company}, Author: रोग और मर्द</span>
+                <span className="truncate">at {lead.company}, Author: रोग और मर्द</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <div className="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
                   <span className="w-2 h-2 bg-neutral-300 dark:bg-neutral-600 rounded-full"></span>
-                  <span>{lead.company}</span>
+                  <span className="truncate">{lead.company}</span>
                 </div>
                 <Badge variant="secondary" className="bg-orange-50 text-orange-700 border-orange-200 text-xs">
                   Sent 7 mins ago
@@ -147,7 +147,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           </div>
 
           {/* Additional Profile Info */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <Button
               variant="ghost"
               className="w-full justify-between p-0 h-auto text-sm text-neutral-600 dark:text-neutral-400 hover:bg-transparent"
@@ -157,7 +157,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
               <ChevronDown className={`h-4 w-4 transition-transform ${showAdditionalInfo ? "rotate-180" : ""}`} />
             </Button>
             {showAdditionalInfo && (
-              <div className="mt-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
+              <div className="mt-3 p-3 sm:p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
                 <div className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
                   <p>
                     <span className="font-medium">Location:</span> India
@@ -173,26 +173,26 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
             )}
           </div>
 
-          <Separator className="mb-6" />
+          <Separator className="mb-4 sm:mb-6" />
 
           {/* Timeline */}
           <div className="relative">
-            <div className="absolute left-3 top-6 bottom-0 w-px bg-gray-200"></div>
+            <div className="absolute left-2 sm:left-3 top-6 bottom-0 w-px bg-gray-200"></div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {timelineItems.map((item, index) => (
-                <div key={index} className="relative flex items-start gap-4">
+                <div key={index} className="relative flex items-start gap-3 sm:gap-4">
                   <div
-                    className={`flex-shrink-0 w-6 h-6 rounded-full ${item.bgColor} flex items-center justify-center relative z-10`}
+                    className={`flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full ${item.bgColor} flex items-center justify-center relative z-10`}
                   >
-                    <item.icon className={`w-4 h-4 ${item.iconColor}`} />
+                    <item.icon className={`w-3 h-3 sm:w-4 sm:h-4 ${item.iconColor}`} />
                   </div>
                   <div className="flex-1 min-w-0 pb-2">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{item.title}</h4>
                       {item.time && <span className="text-xs text-neutral-500 dark:text-neutral-400 flex-shrink-0 ml-2">{item.time}</span>}
                     </div>
-                    <div className="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-3 mb-2">
+                    <div className="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-2 sm:p-3 mb-2">
                       <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {item.message.length > 100 && !item.hasMore
                           ? `${item.message.substring(0, 100)}...`

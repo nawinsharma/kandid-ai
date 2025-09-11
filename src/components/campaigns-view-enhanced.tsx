@@ -67,12 +67,12 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
   }
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-4 sm:space-y-6 p-2 sm:p-4 md:p-8 pt-2 sm:pt-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h1>
+          <p className="text-sm text-muted-foreground mt-1 hidden sm:block">
             Manage your campaigns and track their performance
           </p>
         </div>
@@ -80,31 +80,32 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
       </div>
 
       {/* Tabs and Search */}
-      <div className="flex items-center justify-between">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
           <TabsList className="grid w-full grid-cols-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
             <TabsTrigger 
               value="all" 
-              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700 text-xs sm:text-sm"
             >
-              All Campaigns
+              <span className="hidden sm:inline">All Campaigns</span>
+              <span className="sm:hidden">All</span>
             </TabsTrigger>
             <TabsTrigger 
               value="active" 
-              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700 text-xs sm:text-sm"
             >
               Active
             </TabsTrigger>
             <TabsTrigger 
               value="inactive" 
-              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700"
+              className="data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700 text-xs sm:text-sm"
             >
               Inactive
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
-        <div className="relative w-80">
+        <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 w-4 h-4" />
           <Input
             placeholder="Search campaigns..."
@@ -118,7 +119,8 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
       {/* Campaigns Table */}
       <Card>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-700">
                 <tr>
@@ -203,6 +205,73 @@ const CampaignsViewEnhanced = memo(function CampaignsViewEnhanced() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {isLoading ? (
+              // Loading skeleton for mobile
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="p-4 border-b border-gray-100 dark:border-gray-700">
+                  <div className="space-y-3">
+                    <Skeleton className="h-4 w-3/4" />
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-6 w-16" />
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              filteredCampaigns.map((campaign: Record<string, unknown>) => (
+                <div
+                  key={campaign.id as string}
+                  className="p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+                  onClick={() => handleCampaignClick(campaign.id as string)}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">
+                        {campaign.name as string}
+                      </h3>
+                      {getStatusBadge(campaign.status as string)}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+                      <Users className="w-3 h-3" />
+                      <span>{(campaign.totalLeads as number) || 0} leads</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <UserPlus className="w-3 h-3 text-green-500" />
+                          <span>0</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-yellow-500" />
+                          <span>{(campaign.totalLeads as number) || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <X className="w-3 h-3 text-red-500" />
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Users className="w-3 h-3 text-blue-500" />
+                          <span>0</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3 text-purple-500" />
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>

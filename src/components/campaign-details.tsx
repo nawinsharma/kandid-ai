@@ -175,12 +175,12 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Campaign Details</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage and track your campaign performance</p>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-neutral-100">Campaign Details</h1>
+          <p className="text-sm text-muted-foreground mt-1 hidden sm:block">Manage and track your campaign performance</p>
         </div>
         <Badge variant="secondary" className={
           campaign.status === 'active' 
@@ -197,32 +197,35 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
 
       {/* Tabs */}
       <Tabs defaultValue="leads" className="w-full">
-        <TabsList className="inline-flex h-auto items-center justify-start bg-transparent p-0 border-0 shadow-none">
-          <TabsTrigger value="overview" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
-            <div className="w-4 h-4 rounded border border-gray-400 bg-white mr-2 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+        <TabsList className="inline-flex h-auto items-center justify-start bg-transparent p-0 border-0 shadow-none overflow-x-auto">
+          <TabsTrigger value="overview" className="inline-flex items-center justify-center whitespace-nowrap px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded border border-gray-400 bg-white mr-1 sm:mr-2 flex items-center justify-center">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400"></div>
             </div>
-            Overview
+            <span className="hidden sm:inline">Overview</span>
+            <span className="sm:hidden">Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="leads" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
-            <Users className="w-4 h-4 mr-2" />
+          <TabsTrigger value="leads" className="inline-flex items-center justify-center whitespace-nowrap px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <Users className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             Leads
           </TabsTrigger>
-          <TabsTrigger value="sequence" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Sequence
+          <TabsTrigger value="sequence" className="inline-flex items-center justify-center whitespace-nowrap px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Sequence</span>
+            <span className="sm:hidden">Seq</span>
           </TabsTrigger>
-          <TabsTrigger value="settings" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
-            <div className="w-4 h-4 rounded border border-gray-400 bg-white mr-2 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+          <TabsTrigger value="settings" className="inline-flex items-center justify-center whitespace-nowrap px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded border border-gray-400 bg-white mr-1 sm:mr-2 flex items-center justify-center">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400"></div>
             </div>
-            Settings
+            <span className="hidden sm:inline">Settings</span>
+            <span className="sm:hidden">Settings</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-4 sm:space-y-6">
           {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Total Leads</CardTitle>
@@ -261,7 +264,7 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
             </Card>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
             {/* Campaign Progress */}
             <Card>
               <CardHeader>
@@ -295,7 +298,7 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
             {/* Campaign Details */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-3xl font-bold">Campaign Details</CardTitle>
+                <CardTitle className="text-lg sm:text-xl font-bold">Campaign Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -328,7 +331,8 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
         <TabsContent value="leads">
           <Card>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              {/* Desktop Table View */}
+              <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50 dark:bg-neutral-700 border-b border-gray-200 dark:border-neutral-700">
                     <tr>
@@ -392,28 +396,70 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
                           No leads found for this campaign.
                         </td>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {campaign.leads && campaign.leads.length > 0 ? (
+              campaign.leads.map((lead: Lead) => (
+                <div
+                  key={lead.id}
+                  className="p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+                  onClick={() => setSelectedLead({
+                    ...lead,
+                    title: lead.title || 'No title',
+                    company: lead.company || 'No company',
+                    campaign: campaign.name,
+                    statusType: lead.status,
+                    avatar: lead.name ? lead.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2) : '??',
+                    lastContact: lead.lastContactDate || null,
+                  })}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={lead.profileImage || `/placeholder-32px.png?height=40&width=40`} />
+                      <AvatarFallback className="text-sm bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
+                        {lead.name ? lead.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2) : '??'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{lead.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{lead.title || 'No title'}</p>
+                    </div>
+                    <div className="flex flex-col items-end space-y-1">
+                      {renderActivityBars(lead.activity || 0)}
+                      {getStatusBadge(lead.status)}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="p-6 text-center text-gray-500 dark:text-neutral-400 text-sm">
+                No leads found for this campaign.
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
+        </CardContent>
+      </Card>
         </TabsContent>
 
-        <TabsContent value="sequence" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
+        <TabsContent value="sequence" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
             {/* Request Message */}
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-lg font-semibold">Request Message</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">Edit your request message here.</p>
+                  <CardTitle className="text-base sm:text-lg font-semibold">Request Message</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1 hidden sm:block">Edit your request message here.</p>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                     Preview
                   </Button>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 flex-1 sm:flex-none">
                     Save
                   </Button>
                 </div>
@@ -469,22 +515,22 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
 
           {/* Connection Message */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-lg font-semibold">Connection Message</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">Edit your connection message here.</p>
+                <CardTitle className="text-base sm:text-lg font-semibold">Connection Message</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1 hidden sm:block">Edit your connection message here.</p>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+              <div className="flex gap-2 w-full sm:w-auto">
+                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                   Preview
                 </Button>
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 flex-1 sm:flex-none">
                   Save
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
                 <div>
                   <Label className="text-sm font-medium text-gray-700 dark:text-neutral-300 mb-3 block">Available fields:</Label>
                   <div className="space-y-2">
@@ -522,11 +568,11 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
         </TabsContent>
 
         <TabsContent value="settings">
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-lg font-semibold">Campaign Settings</CardTitle>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">Save All Changes</Button>
+              <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <CardTitle className="text-base sm:text-lg font-semibold">Campaign Settings</CardTitle>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">Save All Changes</Button>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">

@@ -108,33 +108,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <>
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" className="w-64 sm:w-64" {...props}>
       <SidebarHeader>
-        <div className={`flex items-center gap-2 px-4 py-2 ${isCollapsed ? "justify-center" : ""}`}>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
+        <div className={`flex items-center gap-2 px-2 sm:px-4 py-2 ${isCollapsed ? "justify-center" : ""}`}>
+          <div className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xs sm:text-sm">
             🐦
           </div>
-          {!isCollapsed && <span className="font-semibold text-lg text-blue-600">LinkBird</span>}
+          {!isCollapsed && <span className="font-semibold text-base sm:text-lg text-blue-600">LinkBird</span>}
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         {/* Top User Profile Section */}
         {!isCollapsed && (
-          <div className="px-4 py-3 border-b">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-8 w-8">
+          <div className="px-2 sm:px-4 py-3 border-b">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
                 <AvatarImage src="/placeholder.svg?height=32&width=32" />
                 <AvatarFallback className="bg-gray-200 text-gray-600 text-xs">
                   PE
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium dark:text-gray-100 text-gray-900 truncate">
+                <p className="text-xs sm:text-sm font-medium dark:text-gray-100 text-gray-900 truncate">
                   Kandid
                 </p>
                 <div className="flex items-center gap-1">
-                  <p className="text-xs text-gray-500 dark:text-gray-400  truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                     Personal
                   </p>
                   <ChevronDown className="h-3 w-3 text-gray-400 dark:text-gray-400" />
@@ -154,9 +154,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
-                      <a href={item.url} className="flex items-center gap-3">
+                      <a href={item.url} className="flex items-center gap-2 sm:gap-3">
                         <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
+                        <span className="text-sm sm:text-base">{item.title}</span>
                         {item.badge && !isCollapsed && (
                           <span className="ml-auto bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
                             {item.badge}
@@ -181,9 +181,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
-                      <a href={item.url} className="flex items-center gap-3">
+                      <a href={item.url} className="flex items-center gap-2 sm:gap-3">
                         <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
+                        <span className="text-sm sm:text-base">{item.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -203,9 +203,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title} isActive={isActive} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 data-[active=true]:bg-blue-50 dark:data-[active=true]:bg-blue-900/20">
-                      <a href={item.url} className="flex items-center gap-3">
+                      <a href={item.url} className="flex items-center gap-2 sm:gap-3">
                         <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
+                        <span className="text-sm sm:text-base">{item.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -221,25 +221,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <>
             {/* Action Icons */}
             {!isCollapsed && (
-              <div className="px-4 py-2">
-                <div className="flex items-center justify-center gap-4">
-                  <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
-                    <MessageSquare className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              <div className="px-2 sm:px-4 py-2">
+                <div className="flex items-center justify-center gap-2 sm:gap-4">
+                  <button className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                   </button>
-                  <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
-                    <Share2 className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  <button className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                   </button>
-                  <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
-                    <Headphones className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  <button className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                    <Headphones className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                   </button>
                   <button 
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                    className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                   >
                     {theme === "dark" ? (
-                      <Sun className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                     ) : (
-                      <Moon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                     )}
                   </button>
                 </div>
@@ -247,10 +247,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             )}
 
             {/* Bottom User Profile Section */}
-            <div className="px-4 py-3 border-t">
-              <div className="flex items-center gap-3">
+            <div className="px-2 sm:px-4 py-3 border-t">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="relative">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
                     <AvatarImage src={(user.image as string) || "/placeholder.svg?height=32&width=32"} />
                     <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs">
                       {(user.name as string) ? (user.name as string).split(' ').map(n => n[0]).join('').slice(0, 2) : (user.email as string).charAt(0).toUpperCase()}
@@ -264,20 +264,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                           {(user.name as string) || "User"}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                           {user.email as string}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <ChevronDown className="h-4 w-4 text-gray-400" />
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
                         <button
                           onClick={() => setShowLogoutDialog(true)}
                           className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                         >
-                          <LogOut className="h-4 w-4 text-red-500 hover:text-red-600" />
+                          <LogOut className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 hover:text-red-600" />
                         </button>
                       </div>
                     </div>
@@ -287,13 +287,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </div>
           </>
         ) : (
-          <div className="flex items-center gap-3 px-4 py-3 border-t">
-            <Avatar className="h-8 w-8">
+          <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-t">
+            <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
               <AvatarFallback className="bg-gray-200 text-gray-600">?</AvatarFallback>
             </Avatar>
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900">Not signed in</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-900">Not signed in</p>
                 <p className="text-xs text-gray-500">Please log in</p>
                 <button 
                   onClick={() => {

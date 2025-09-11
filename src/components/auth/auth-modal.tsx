@@ -426,7 +426,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
       )}
 
       <form onSubmit={handleEmailRegister} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="register-firstname" className="text-sm font-medium text-gray-700">
               First Name
@@ -552,7 +552,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogOverlay className="bg-gray-200/60 backdrop-blur-sm" />
-      <DialogContent className="sm:max-w-md w-full mx-4 rounded-2xl shadow-xl border-0 p-8 bg-white">
+      <DialogContent className="sm:max-w-md w-full mx-2 sm:mx-4 rounded-2xl shadow-xl border-0 p-4 sm:p-8 bg-white">
         <DialogTitle className="sr-only">
           {mode === "welcome" && "Authentication"}
           {mode === "login" && "Login"}

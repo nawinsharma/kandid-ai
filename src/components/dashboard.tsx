@@ -134,20 +134,20 @@ export function Dashboard() {
   const { campaigns, linkedinAccounts, recentActivity } = data || {};
 
   return (
-    <div className="flex-1 space-y-8 p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Dashboard</h1>
+    <div className="flex-1 space-y-4 sm:space-y-8 p-2 sm:p-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-neutral-100 hidden sm:block">Dashboard</h1>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Left Column - Campaigns and LinkedIn Accounts stacked vertically */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Campaigns Section */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-neutral-100">Campaigns</h2>
               <Button
                 variant="outline"
                 size="sm"
-                className="text-sm"
+                className="text-xs sm:text-sm hidden sm:flex"
                 onClick={() => router.push('/campaigns')}
               >
                 All Campaigns <ChevronDown className="ml-2 h-4 w-4" />
@@ -157,17 +157,17 @@ export function Dashboard() {
               <div className="divide-y divide-gray-100 dark:divide-neutral-700">
                 {campaigns?.length > 0 ? (
                   campaigns.map((campaign: { id: string; name: string; totalLeads: number; status: string }) => (
-                    <div key={campaign.id} className="flex items-center justify-between px-6 py-4">
-                      <div className="flex-1">
-                        <span className="text-sm font-medium text-gray-900 dark:text-neutral-100">{campaign.name}</span>
+                    <div key={campaign.id} className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">{campaign.name}</span>
                       </div>
-                      <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700 text-xs font-medium px-2 py-1">
+                      <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700 text-xs font-medium px-2 py-1 ml-2">
                         Active
                       </Badge>
                     </div>
                   ))
                 ) : (
-                  <div className="px-6 py-8 text-center text-gray-500 dark:text-neutral-400">
+                  <div className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 dark:text-neutral-400 text-sm">
                     No campaigns found. Create your first campaign to get started.
                   </div>
                 )}
@@ -176,46 +176,46 @@ export function Dashboard() {
           </div>
 
           {/* LinkedIn Accounts Section */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">LinkedIn Accounts</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-neutral-100">LinkedIn Accounts</h2>
             </div>
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
-              <div className="px-6 py-3 border-b border-gray-100 dark:border-neutral-700">
-                <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
+              <div className="px-3 sm:px-6 py-3 border-b border-gray-100 dark:border-neutral-700">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
                   <div>Account</div>
-                  <div>Status</div>
-                  <div>Requests</div>
+                  <div className="hidden sm:block">Status</div>
+                  <div className="hidden sm:block">Requests</div>
                 </div>
               </div>
               <div className="divide-y divide-gray-100 dark:divide-neutral-700">
                 {linkedinAccounts?.length > 0 ? (
                   linkedinAccounts.map((account: { id: string; name: string; status: string; requestsSent: number; requestsLimit: number; progress: number }) => (
-                    <div key={account.id} className="grid grid-cols-3 gap-4 items-center px-6 py-4">
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-10 w-10">
+                    <div key={account.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center px-3 sm:px-6 py-3 sm:py-4">
+                      <div className="flex items-center space-x-2 sm:space-x-3">
+                        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                           <AvatarImage src={`/generic-placeholder-graphic.png?height=40&width=40`} />
-                          <AvatarFallback className="text-sm bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200 font-medium">
+                          <AvatarFallback className="text-xs sm:text-sm bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200 font-medium">
                             {account.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <div className="flex items-center space-x-1">
-                            <p className="text-sm font-medium text-gray-900 dark:text-neutral-100">{account.name}</p>
-                            <div className="w-4 h-4 bg-blue-600 rounded flex items-center justify-center">
+                            <p className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">{account.name}</p>
+                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-600 rounded flex items-center justify-center">
                               <span className="text-white text-xs font-bold">in</span>
                             </div>
                           </div>
                           <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.name.toLowerCase().replace(' ', '')}@gmail.com</p>
                         </div>
                       </div>
-                      <div>
+                      <div className="sm:block">
                         <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
                           <CheckCircle className="w-3 h-3 mr-1" />
                           Connected
                         </Badge>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-2 sm:block">
                         <div className="flex items-center justify-between text-sm">
                           <span className="font-medium text-gray-900 dark:text-neutral-100">
                             {account.requestsSent}/{account.requestsLimit}
@@ -226,7 +226,7 @@ export function Dashboard() {
                     </div>
                   ))
                 ) : (
-                  <div className="px-6 py-8 text-center text-gray-500 dark:text-neutral-400">
+                  <div className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 dark:text-neutral-400 text-sm">
                     No LinkedIn accounts connected.
                   </div>
                 )}
@@ -236,50 +236,51 @@ export function Dashboard() {
         </div>
 
         {/* Recent Activity Section - Takes full right side */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Activity</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-neutral-100">Recent Activity</h2>
             <Button
               variant="outline"
               size="sm"
-              className="text-sm"
+              className="text-xs sm:text-sm hidden sm:flex"
               onClick={() => router.push('/leads')}
             >
               Most Recent <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </div>
           <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg">
-            <div className="px-6 py-3 border-b border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-700">
-              <div className="grid grid-cols-3 gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
+            <div className="px-3 sm:px-6 py-3 border-b border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-700">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide">
                 <div>Lead</div>
-                <div>Campaign</div>
-                <div>Status</div>
+                <div className="hidden sm:block">Campaign</div>
+                <div className="hidden sm:block">Status</div>
               </div>
             </div>
             <div className="divide-y divide-gray-100 dark:divide-neutral-700">
               {recentActivity?.length > 0 ? (
                 recentActivity.slice(0, 8).map((activity: { id: string; name: string; title: string; campaign: string; statusType: string; profileImage?: string }) => (
-                  <div key={activity.id} className="grid grid-cols-3 gap-4 items-center px-6 py-4 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8">
+                  <div key={activity.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center px-3 sm:px-6 py-3 sm:py-4 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                         <AvatarImage src={activity.profileImage || `/placeholder-32px.png?height=32&width=32`} />
                         <AvatarFallback className="text-xs bg-gray-100 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 font-medium">
                           {activity.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-neutral-100 truncate">{activity.name}</p>
                         <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{activity.title}</p>
+                        <p className="text-xs text-gray-500 dark:text-neutral-400 truncate sm:hidden">{activity.campaign}</p>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-neutral-400">{activity.campaign}</div>
-                    <div>
+                    <div className="text-sm text-gray-600 dark:text-neutral-400 hidden sm:block">{activity.campaign}</div>
+                    <div className="sm:block">
                       {getActivityStatusBadge(activity.statusType)}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="px-6 py-8 text-center text-gray-500 dark:text-neutral-400">
+                <div className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 dark:text-neutral-400 text-sm">
                   No recent activity. Start creating leads to see activity here.
                 </div>
               )}

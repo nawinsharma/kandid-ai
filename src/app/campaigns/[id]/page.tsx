@@ -40,10 +40,10 @@ export default async function CampaignDetailsPage({ params }: { params: Promise<
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
+          <div className="flex items-center gap-2 px-2 sm:px-4 flex-1">
             <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
+            <Separator orientation="vertical" className="mr-2 h-4 hidden sm:block" />
+            <Breadcrumb className="hidden sm:block">
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink href="/campaigns">Campaign</BreadcrumbLink>
@@ -54,9 +54,12 @@ export default async function CampaignDetailsPage({ params }: { params: Promise<
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <div className="sm:hidden">
+              <h1 className="text-lg font-semibold truncate">{campaignName}</h1>
+            </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-2 sm:p-4 pt-0">
           <CampaignDetails campaignId={id} />
         </div>
       </SidebarInset>

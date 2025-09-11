@@ -96,18 +96,19 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
   }
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-4 sm:space-y-6 p-2 sm:p-4 md:p-8 pt-2 sm:pt-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
         </div>
       </div>
 
       {/* Leads Table */}
       <Card>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-700">
                 <tr>
@@ -177,6 +178,51 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {isLoading ? (
+              // Loading skeleton for mobile
+              Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="p-4 border-b border-gray-100 dark:border-gray-700">
+                  <div className="flex items-center space-x-3">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-48" />
+                    </div>
+                    <Skeleton className="h-6 w-20" />
+                  </div>
+                </div>
+              ))
+            ) : (
+              allLeads.map((lead: Record<string, unknown>) => (
+                <div
+                  key={lead.id as string}
+                  className="p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+                  onClick={() => setSelectedLead(lead)}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={(lead.profileImage as string) || `/placeholder-32px.png?height=40&width=40`} />
+                      <AvatarFallback className="text-sm bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-medium">
+                        {(lead.name as string)?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "L"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{lead.name as string}</p>
+                      <p className="text-xs text-muted-foreground truncate">{lead.title as string}</p>
+                      <p className="text-xs text-muted-foreground truncate">{(lead.campaign as Record<string, unknown>)?.name as string || "N/A"}</p>
+                    </div>
+                    <div className="flex flex-col items-end space-y-1">
+                      {renderActivityBars((lead.activity as number) || 0)}
+                      {getStatusBadge(lead.status as string, lead.status as string)}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
