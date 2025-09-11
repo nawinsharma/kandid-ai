@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { X, ChevronDown, CheckCircle, Clock, MessageSquare, Trash2, ExternalLink } from "lucide-react"
+import { useDeleteLead } from "@/hooks/use-leads"
+import { useToast } from "@/hooks/use-toast"
 
 interface Lead {
   id: string
@@ -29,6 +31,18 @@ interface LeadProfilePanelProps {
 
 export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProps) {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false)
+  const deleteLead = useDeleteLead()
+  const { toast } = useToast()
+
+  const handleDelete = async () => {
+    try {
+      await deleteLead.mutateAsync(lead.id)
+      toast({ title: "Lead deleted" })
+      onClose()
+    } catch {
+      toast({ title: "Failed to delete lead", variant: "destructive" })
+    }
+  }
 
   const timelineItems = [
     {
@@ -106,7 +120,7 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
           <div className="flex items-center justify-between">
             <SheetTitle className="text-base sm:text-lg font-semibold">Lead Profile</SheetTitle>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={handleDelete} disabled={deleteLead.isPending}>
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
             </div>

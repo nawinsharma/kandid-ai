@@ -13,9 +13,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface CreateLeadFormProps {
   trigger?: React.ReactNode;
+  defaultCampaignId?: string;
 }
 
-export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
+export function CreateLeadForm({ trigger, defaultCampaignId }: CreateLeadFormProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -24,7 +25,7 @@ export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
     company: "",
     linkedinUrl: "",
     profileImage: "",
-    campaignId: "",
+    campaignId: defaultCampaignId || "",
     status: "pending" as const,
     activity: 0,
   });
@@ -59,7 +60,7 @@ export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
         company: "",
         linkedinUrl: "",
         profileImage: "",
-        campaignId: "",
+        campaignId: defaultCampaignId || "",
         status: "pending",
         activity: 0,
       });
@@ -156,21 +157,23 @@ export function CreateLeadForm({ trigger }: CreateLeadFormProps) {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="campaign">Campaign *</Label>
-            <Select value={formData.campaignId} onValueChange={(value) => handleInputChange("campaignId", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a campaign" />
-              </SelectTrigger>
-              <SelectContent>
-                {campaigns?.map((campaign: { id: string; name: string }) => (
-                  <SelectItem key={campaign.id} value={campaign.id}>
-                    {campaign.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {defaultCampaignId ? null : (
+            <div className="space-y-2">
+              <Label htmlFor="campaign">Campaign *</Label>
+              <Select value={formData.campaignId} onValueChange={(value) => handleInputChange("campaignId", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a campaign" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campaigns?.map((campaign: { id: string; name: string }) => (
+                    <SelectItem key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
