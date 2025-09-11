@@ -1,13 +1,22 @@
-import { PrismaClient } from '@prisma/client';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+import * as schema from './schema';
 
-// Create a single instance of PrismaClient
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+type DrizzleDb = ReturnType<typeof drizzle>;
+const globalForDb = globalThis as unknown as {
+  pgPool: Pool | undefined;
+  drizzleDb: DrizzleDb | undefined;
 };
 
-export const db = globalForPrisma.prisma ?? new PrismaClient();
+const pool = globalForDb.pgPool ?? new Pool({ connectionString: process.env.DATABASE_URL });
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
+// pg Pool manages its own connections; no explicit connect needed
 
-// Export types for convenience
-export type { User, Campaign, Lead, LinkedinAccount } from '@prisma/client';
+export const db = globalForDb.drizzleDb ?? drizzle(pool, { schema });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForDb.pgPool = pool;
+  globalForDb.drizzleDb = db;
+}
+
+export * as tables from './schema';

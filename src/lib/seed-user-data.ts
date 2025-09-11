@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db, tables } from './db';
+import { eq } from 'drizzle-orm';
 
 // Sample campaigns data (from main seed file)
 const sampleCampaigns = [
@@ -545,9 +544,9 @@ export async function seedUserData(userId: string) {
     console.log(`Starting data seeding for user: ${userId}`);
     
     // Check if user already has data
-    const existingCampaigns = await prisma.campaign.count({
-      where: { userId }
-    });
+    const existingCampaigns = (
+      await db.select({ count: tables.campaigns.id }).from(tables.campaigns).where(eq(tables.campaigns.userId, userId))
+    ).length;
     
     if (existingCampaigns > 0) {
       console.log(`⚠️  User ${userId} already has campaigns. Skipping seeding.`);
@@ -556,30 +555,42 @@ export async function seedUserData(userId: string) {
     
     // Create LinkedIn accounts first
     console.log("Creating LinkedIn accounts...");
-    const linkedinAccounts = await Promise.all(
-      sampleLinkedinAccounts.map(account =>
-        prisma.linkedinAccount.create({
-          data: {
-            ...account,
-            userId
-          }
-        })
-      )
-    );
+    const insertedLinkedinAccounts = await db
+      .insert(tables.linkedinAccounts)
+      .values(sampleLinkedinAccounts.map(a => ({
+        id: crypto.randomUUID(),
+        name: a.name,
+        email: a.email,
+        status: a.status,
+        requestsSent: a.requestsSent,
+        requestsLimit: a.requestsLimit,
+        progress: a.progress.toFixed(2),
+        userId,
+      })))
+      .returning({ id: tables.linkedinAccounts.id });
+    const linkedinAccounts = insertedLinkedinAccounts;
     console.log(`Created ${linkedinAccounts.length} LinkedIn accounts`);
     
     // Create campaigns
     console.log("Creating campaigns...");
-    const campaigns = await Promise.all(
-      sampleCampaigns.map(campaign =>
-        prisma.campaign.create({
-          data: {
-            ...campaign,
-            userId
-          }
-        })
-      )
-    );
+    const insertedCampaigns = await db
+      .insert(tables.campaigns)
+      .values(sampleCampaigns.map(c => ({
+        id: crypto.randomUUID(),
+        name: c.name,
+        description: c.description,
+        status: c.status,
+        totalLeads: c.totalLeads,
+        successfulLeads: c.successfulLeads,
+        responseRate: c.responseRate.toFixed(2),
+        requestMessage: c.requestMessage,
+        connectionMessage: c.connectionMessage,
+        followupMessages: c.followupMessages,
+        settings: c.settings,
+        userId,
+      })))
+      .returning({ id: tables.campaigns.id });
+    const campaigns = insertedCampaigns;
     console.log(`Created ${campaigns.length} campaigns`);
     
     // Create leads and associate them with campaigns
@@ -591,22 +602,16 @@ export async function seedUserData(userId: string) {
       const endIndex = Math.min(startIndex + leadsPerCampaign, sampleLeads.length);
       const campaignLeads = sampleLeads.slice(startIndex, endIndex);
       
-      await Promise.all(
-        campaignLeads.map(lead =>
-          prisma.lead.create({
-            data: {
-              ...lead,
-              campaignId: campaign.id,
-              userId
-            }
-          })
-        )
-      );
+      if (campaignLeads.length) {
+        await db.insert(tables.leads).values(
+          campaignLeads.map(l => ({ id: crypto.randomUUID(), ...l, campaignId: campaign.id, userId }))
+        );
+      }
     }
     
-    const totalLeads = await prisma.lead.count({
-      where: { userId }
-    });
+    const totalLeads = (
+      await db.select({ id: tables.leads.id }).from(tables.leads).where(eq(tables.leads.userId, userId))
+    ).length;
     console.log(`✅ Created ${totalLeads} leads`);
     
     console.log("🎉 User data seeding completed successfully!");
@@ -630,19 +635,21 @@ export async function seedUserData(userId: string) {
 export async function checkAndSeedUserData(userId: string) {
   try {
     // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { id: userId }
-    });
+    const user = await db
+      .select()
+      .from(tables.users)
+      .where(eq(tables.users.id, userId))
+      .limit(1);
     
-    if (!user) {
+    if (!user.length) {
       console.log(`  User ${userId} not found. Skipping seeding.`);
       return;
     }
     
     // Check if user already has data
-    const existingCampaigns = await prisma.campaign.count({
-      where: { userId }
-    });
+    const existingCampaigns = (
+      await db.select({ id: tables.campaigns.id }).from(tables.campaigns).where(eq(tables.campaigns.userId, userId))
+    ).length;
     
     if (existingCampaigns > 0) {
       return;

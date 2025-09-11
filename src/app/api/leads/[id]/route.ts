@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { and, eq } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
@@ -16,13 +17,11 @@ export async function GET(
     }
 
     const { id } = await params;
-
-    const lead = await db.lead.findFirst({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-    });
+    const [lead] = await db
+      .select()
+      .from(tables.leads)
+      .where(and(eq(tables.leads.id, id), eq(tables.leads.userId, session.user.id)))
+      .limit(1);
 
     if (!lead) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
@@ -51,28 +50,22 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const updatedLead = await db.lead.updateMany({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-      data: {
-        ...body,
-        updatedAt: new Date(),
-      },
-    });
+    const updatedLead = await db
+      .update(tables.leads)
+      .set({ ...body, updatedAt: new Date() })
+      .where(and(eq(tables.leads.id, id), eq(tables.leads.userId, session.user.id)));
 
-    if (updatedLead.count === 0) {
+    // Check if any rows were updated
+    if (!updatedLead.rowCount || updatedLead.rowCount === 0) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 
     // Fetch the updated lead
-    const lead = await db.lead.findFirst({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-    });
+    const [lead] = await db
+      .select()
+      .from(tables.leads)
+      .where(and(eq(tables.leads.id, id), eq(tables.leads.userId, session.user.id)))
+      .limit(1);
 
     return NextResponse.json(lead);
   } catch (error) {
@@ -96,14 +89,11 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const deletedLead = await db.lead.deleteMany({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-    });
+    const deletedLead = await db
+      .delete(tables.leads)
+      .where(and(eq(tables.leads.id, id), eq(tables.leads.userId, session.user.id)));
 
-    if (deletedLead.count === 0) {
+    if (!deletedLead.rowCount || deletedLead.rowCount === 0) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 

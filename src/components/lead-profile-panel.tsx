@@ -109,9 +109,6 @@ export function LeadProfilePanel({ lead, isOpen, onClose }: LeadProfilePanelProp
               <Button variant="ghost" size="sm">
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </SheetHeader>

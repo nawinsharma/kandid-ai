@@ -7,22 +7,11 @@
 
 https://github.com/user-attachments/assets/9b70eb6d-f7c2-4296-9a82-bb39794ee7be
 
-
-## Features
-
-- **Authentication**: Email/password and Google OAuth integration
-- **Dashboard**: Real-time campaign and lead analytics
-- **Lead Management**: Infinite scrolling, search, and filtering
-- **Campaign Tracking**: Progress monitoring and success metrics
-- **LinkedIn Integration**: Account management and outreach automation
-- **Responsive Design**: Mobile-friendly interface
-- **Performance**: Optimized with React.memo and database indexing
-
 ## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS, shadcn/ui
-- **Database**: PostgreSQL, prisma ORM
+- **Database**: PostgreSQL, Drizzle ORM
 - **Authentication**: Better Auth
 - **State Management**: Zustand, TanStack Query
 - **Deployment**: Vercel (recommended)
@@ -48,33 +37,28 @@ bun install
 Create a `.env.local` file:
 
 ```env
-# Database Configuration
+# Database
 DATABASE_URL="postgresql://username:password@localhost:5432/kandid_ai"
 
-# Better Auth Configuration
+# Better Auth
 BETTER_AUTH_SECRET="your-super-secret-key-here-make-it-long-and-random"
-BETTER_AUTH_URL="http://localhost:3000"
+
+# App URL (used by auth client)
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # Google OAuth (Optional)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
-
-# Next.js Configuration
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-nextauth-secret"
 ```
 
 ### 3. Database Setup
 
 ```bash
-# Generate migrations
+# Generate migrations (Drizzle)
 bun run db:generate
 
 # Run migrations
 bun run db:migrate
-
-# Seed with sample data (optional)
-bun run db:seed
 ```
 
 ### 4. Start Development Server
@@ -94,15 +78,11 @@ bun run build        # Build for production
 bun run start        # Start production server
 bun run lint         # Run ESLint
 
-# Database
+# Database (Drizzle)
 bun run db:generate  # Generate migration files
 bun run db:migrate   # Apply migrations
 bun run db:studio    # Open database GUI
 bun run db:push      # Push schema (dev only)
-bun run db:seed      # Seed with sample data
-
-# Utilities
-bun run type-check   # TypeScript type checking
 ```
 
 ## Database Setup Options

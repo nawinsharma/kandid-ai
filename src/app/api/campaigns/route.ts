@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,35 +13,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userCampaigns = await db.campaign.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        leads: {
-          select: {
-            id: true,
-            status: true,
-          },
-        },
-      },
-    });
+    const userCampaigns = await db
+      .select()
+      .from(tables.campaigns)
+      .where(eq(tables.campaigns.userId, session.user.id))
+      .orderBy(desc(tables.campaigns.createdAt));
 
     // Calculate statistics for each campaign
-    const campaignsWithStats = userCampaigns.map(campaign => {
-      const totalLeads = campaign.leads.length;
-      const successfulLeads = campaign.leads.filter(lead => 
-        lead.status === 'responded' || lead.status === 'converted'
-      ).length;
-      const responseRate = totalLeads > 0 ? (successfulLeads / totalLeads) * 100 : 0;
+    const leadCounts = await db
+      .select({
+        campaignId: tables.leads.campaignId,
+        total: sql<number>`count(*)`.mapWith(Number),
+        successful: sql<number>`sum(case when ${tables.leads.status} in ('responded','converted') then 1 else 0 end)`.mapWith(Number),
+      })
+      .from(tables.leads)
+      .where(eq(tables.leads.userId, session.user.id))
+      .groupBy(tables.leads.campaignId);
+    const countMap = new Map<string, { total: number; successful: number }>();
+    for (const r of leadCounts) countMap.set(r.campaignId, { total: r.total, successful: r.successful ?? 0 });
 
-      return {
-        ...campaign,
-        totalLeads,
-        successfulLeads,
-        responseRate: responseRate.toFixed(2),
-        leads: undefined, // Remove the leads array from the response
-      };
+    const campaignsWithStats = userCampaigns.map(c => {
+      const cCounts = countMap.get(c.id) ?? { total: 0, successful: 0 };
+      const responseRate = cCounts.total > 0 ? (cCounts.successful / cCounts.total) * 100 : 0;
+      return { ...c, totalLeads: cCounts.total, successfulLeads: cCounts.successful, responseRate: responseRate.toFixed(2) };
     });
 
     return NextResponse.json(campaignsWithStats);
@@ -66,9 +61,10 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
     };
 
-    const campaign = await db.campaign.create({
-      data: newCampaign,
-    });
+    const [campaign] = await db
+      .insert(tables.campaigns)
+      .values([{ id: crypto.randomUUID(), ...newCampaign }])
+      .returning();
 
     return NextResponse.json(campaign);
   } catch (error) {

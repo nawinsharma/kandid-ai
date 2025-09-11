@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { and, desc, eq } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
@@ -17,43 +18,43 @@ export async function GET(
 
     const { id } = await params;
 
-    const campaign = await db.campaign.findFirst({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-      include: {
-        leads: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            title: true,
-            company: true,
-            linkedinUrl: true,
-            profileImage: true,
-            status: true,
-            activity: true,
-            lastContactDate: true,
-            createdAt: true,
-          },
-        },
-      },
-    });
+    const [campaign] = await db
+      .select()
+      .from(tables.campaigns)
+      .where(and(eq(tables.campaigns.id, id), eq(tables.campaigns.userId, session.user.id)))
+      .limit(1);
 
     if (!campaign) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
-    // Calculate statistics
-    const totalLeads = campaign.leads.length;
-    const contactedLeads = campaign.leads.filter(lead => 
+    // Leads for campaign
+    const leads = await db
+      .select({
+        id: tables.leads.id,
+        name: tables.leads.name,
+        email: tables.leads.email,
+        title: tables.leads.title,
+        company: tables.leads.company,
+        linkedinUrl: tables.leads.linkedinUrl,
+        profileImage: tables.leads.profileImage,
+        status: tables.leads.status,
+        activity: tables.leads.activity,
+        lastContactDate: tables.leads.lastContactDate,
+        createdAt: tables.leads.createdAt,
+      })
+      .from(tables.leads)
+      .where(and(eq(tables.leads.campaignId, id), eq(tables.leads.userId, session.user.id)))
+      .orderBy(desc(tables.leads.createdAt));
+
+    const totalLeads = leads.length;
+    const contactedLeads = leads.filter(lead => 
       lead.status === 'contacted' || lead.status === 'responded' || lead.status === 'converted'
     ).length;
-    const respondedLeads = campaign.leads.filter(lead => 
+    const respondedLeads = leads.filter(lead => 
       lead.status === 'responded' || lead.status === 'converted'
     ).length;
-    const convertedLeads = campaign.leads.filter(lead => 
+    const convertedLeads = leads.filter(lead => 
       lead.status === 'converted'
     ).length;
 
@@ -63,6 +64,7 @@ export async function GET(
 
     const campaignWithStats = {
       ...campaign,
+      leads,
       statistics: {
         totalLeads,
         contactedLeads,
@@ -97,28 +99,21 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const updatedCampaign = await db.campaign.updateMany({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-      data: {
-        ...body,
-        updatedAt: new Date(),
-      },
-    });
+    const updatedCampaign = await db
+      .update(tables.campaigns)
+      .set({ ...body, updatedAt: new Date() })
+      .where(and(eq(tables.campaigns.id, id), eq(tables.campaigns.userId, session.user.id)));
 
-    if (updatedCampaign.count === 0) {
+    if (!updatedCampaign.rowCount || updatedCampaign.rowCount === 0) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
     // Fetch the updated campaign
-    const campaign = await db.campaign.findFirst({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-    });
+    const [campaign] = await db
+      .select()
+      .from(tables.campaigns)
+      .where(and(eq(tables.campaigns.id, id), eq(tables.campaigns.userId, session.user.id)))
+      .limit(1);
 
     return NextResponse.json(campaign);
   } catch (error) {
@@ -142,14 +137,11 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const deletedCampaign = await db.campaign.deleteMany({
-      where: {
-        id: id,
-        userId: session.user.id,
-      },
-    });
+    const deletedCampaign = await db
+      .delete(tables.campaigns)
+      .where(and(eq(tables.campaigns.id, id), eq(tables.campaigns.userId, session.user.id)));
 
-    if (deletedCampaign.count === 0) {
+    if (!deletedCampaign.rowCount || deletedCampaign.rowCount === 0) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 

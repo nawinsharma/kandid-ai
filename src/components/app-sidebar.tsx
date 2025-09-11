@@ -87,7 +87,7 @@ const adminItems = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-  const { user } = useAuthStore()
+  const { user, isLoading } = useAuthStore()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
@@ -217,7 +217,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        {user ? (
+        {isLoading ? (
+          <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-t">
+            <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
+              <AvatarFallback className="bg-gray-200 text-gray-600">…</AvatarFallback>
+            </Avatar>
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-900">Checking session…</p>
+                <p className="text-xs text-gray-500">Please wait</p>
+              </div>
+            )}
+          </div>
+        ) : user ? (
           <>
             {/* Action Icons */}
             {!isCollapsed && (

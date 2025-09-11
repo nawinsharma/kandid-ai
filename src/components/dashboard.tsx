@@ -190,11 +190,11 @@ export function Dashboard() {
               </div>
               <div className="divide-y divide-gray-100 dark:divide-neutral-700">
                 {linkedinAccounts?.length > 0 ? (
-                  linkedinAccounts.map((account: { id: string; name: string; status: string; requestsSent: number; requestsLimit: number; progress: number }) => (
+                  linkedinAccounts.map((account: { id: string; name: string; email: string; status: string; requestsSent: number; requestsLimit: number; progress: number | string }) => (
                     <div key={account.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center px-3 sm:px-6 py-3 sm:py-4">
                       <div className="flex items-center space-x-2 sm:space-x-3">
                         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-                          <AvatarImage src={`/generic-placeholder-graphic.png?height=40&width=40`} />
+                          <AvatarImage src={`https://i.pravatar.cc/150?u=${encodeURIComponent(account.email || account.name)}`} />
                           <AvatarFallback className="text-xs sm:text-sm bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200 font-medium">
                             {account.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                           </AvatarFallback>
@@ -206,14 +206,20 @@ export function Dashboard() {
                               <span className="text-white text-xs font-bold">in</span>
                             </div>
                           </div>
-                          <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.name.toLowerCase().replace(' ', '')}@gmail.com</p>
+                          <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{account.email}</p>
                         </div>
                       </div>
                       <div className="sm:block">
-                        <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Connected
-                        </Badge>
+                        {account.status === 'connected' ? (
+                          <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700 text-xs font-medium px-2 py-1">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Connected
+                          </Badge>
+                        ) : account.status === 'disconnected' ? (
+                          <Badge className="bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 border-gray-200 dark:border-neutral-600 text-xs font-medium px-2 py-1">Disconnected</Badge>
+                        ) : (
+                          <Badge className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-200 dark:border-red-700 text-xs font-medium px-2 py-1">Error</Badge>
+                        )}
                       </div>
                       <div className="space-y-2 sm:block">
                         <div className="flex items-center justify-between text-sm">

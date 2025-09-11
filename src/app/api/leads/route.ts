@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,46 +23,44 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build where conditions
-    const whereConditions: Record<string, unknown> = {
-      userId: session.user.id,
-    };
+    const filters = [eq(tables.leads.userId, session.user.id)];
+    if (status && status !== "all") filters.push(eq(tables.leads.status, status));
+    if (campaignId) filters.push(eq(tables.leads.campaignId, campaignId));
 
-    if (search) {
-      whereConditions.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
-        { company: { contains: search, mode: 'insensitive' } },
-      ];
-    }
+    const searchFilter = search
+      ? or(
+          ilike(tables.leads.name, `%${search}%`),
+          ilike(tables.leads.email, `%${search}%`),
+          ilike(tables.leads.company, `%${search}%`)
+        )
+      : undefined;
 
-    if (status && status !== "all") {
-      whereConditions.status = status;
-    }
+    const whereExpr = searchFilter ? and(...filters, searchFilter) : and(...filters);
 
-    if (campaignId) {
-      whereConditions.campaignId = campaignId;
-    }
+    const userLeads = await db
+      .select({
+        id: tables.leads.id,
+        name: tables.leads.name,
+        email: tables.leads.email,
+        profileImage: tables.leads.profileImage,
+        company: tables.leads.company,
+        status: tables.leads.status,
+        createdAt: tables.leads.createdAt,
+        campaign: tables.campaigns.name,
+        campaignId: tables.campaigns.id,
+        campaignStatus: tables.campaigns.status,
+      })
+      .from(tables.leads)
+      .leftJoin(tables.campaigns, eq(tables.leads.campaignId, tables.campaigns.id))
+      .where(whereExpr)
+      .orderBy(desc(tables.leads.createdAt))
+      .limit(limit)
+      .offset(offset);
 
-    const [userLeads, totalCount] = await Promise.all([
-      db.lead.findMany({
-        where: whereConditions,
-        orderBy: { createdAt: 'desc' },
-        take: limit,
-        skip: offset,
-        include: {
-          campaign: {
-            select: {
-              id: true,
-              name: true,
-              status: true,
-            },
-          },
-        },
-      }),
-      db.lead.count({
-        where: whereConditions,
-      }),
-    ]);
+    const [{ count: totalCount }] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(tables.leads)
+      .where(whereExpr);
 
     return NextResponse.json({
       leads: userLeads,
@@ -94,9 +93,10 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
     };
 
-    const lead = await db.lead.create({
-      data: newLead,
-    });
+    const [lead] = await db
+      .insert(tables.leads)
+      .values([{ id: crypto.randomUUID(), ...newLead }])
+      .returning();
 
     return NextResponse.json(lead);
   } catch (error) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,89 +13,86 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Fetch campaigns with lead counts
-    const campaigns = await db.campaign.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        leads: {
-          select: {
-            id: true,
-            status: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 6, // Limit to 6 most recent campaigns
-    });
+    // Fetch campaigns (latest 6)
+    const campaigns = await db
+      .select()
+      .from(tables.campaigns)
+      .where(eq(tables.campaigns.userId, session.user.id))
+      .orderBy(desc(tables.campaigns.createdAt))
+      .limit(6);
+
+    // Lead counts per campaign (total and successful)
+    const counts = await db
+      .select({
+        campaignId: tables.leads.campaignId,
+        total: sql<number>`count(*)`.mapWith(Number),
+        successful: sql<number>`sum(case when ${tables.leads.status} in ('responded','converted') then 1 else 0 end)`.mapWith(Number),
+      })
+      .from(tables.leads)
+      .where(eq(tables.leads.userId, session.user.id))
+      .groupBy(tables.leads.campaignId);
+    const campaignIdToCounts = new Map<string, { total: number; successful: number }>();
+    for (const row of counts) campaignIdToCounts.set(row.campaignId, { total: row.total, successful: row.successful ?? 0 });
 
     // Fetch LinkedIn accounts
-    const linkedinAccounts = await db.linkedinAccount.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const linkedinAccounts = await db
+      .select()
+      .from(tables.linkedinAccounts)
+      .where(eq(tables.linkedinAccounts.userId, session.user.id))
+      .orderBy(desc(tables.linkedinAccounts.createdAt));
 
     // Fetch recent leads with campaign info
-    const recentLeads = await db.lead.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        campaign: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-      take: 8, // Limit to 8 most recent leads
-    });
+    const recentLeads = await db
+      .select({
+        id: tables.leads.id,
+        name: tables.leads.name,
+        title: tables.leads.title,
+        status: tables.leads.status,
+        profileImage: tables.leads.profileImage,
+        updatedAt: tables.leads.updatedAt,
+        campaignId: tables.campaigns.id,
+        campaignName: tables.campaigns.name,
+      })
+      .from(tables.leads)
+      .leftJoin(tables.campaigns, eq(tables.leads.campaignId, tables.campaigns.id))
+      .where(eq(tables.leads.userId, session.user.id))
+      .orderBy(desc(tables.leads.updatedAt))
+      .limit(8);
 
     // Calculate overall statistics
-    const totalCampaigns = await db.campaign.count({
-      where: { userId: session.user.id },
-    });
+    const [{ count: totalCampaigns }] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(tables.campaigns)
+      .where(eq(tables.campaigns.userId, session.user.id));
 
-    const totalLeads = await db.lead.count({
-      where: { userId: session.user.id },
-    });
+    const [{ count: totalLeads }] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(tables.leads)
+      .where(eq(tables.leads.userId, session.user.id));
 
-    const activeCampaigns = await db.campaign.count({
-      where: { 
-        userId: session.user.id,
-        status: 'active',
-      },
-    });
+    const [{ count: activeCampaigns }] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(tables.campaigns)
+      .where(and(eq(tables.campaigns.userId, session.user.id), eq(tables.campaigns.status, 'active')));
 
-    const successfulLeads = await db.lead.count({
-      where: { 
-        userId: session.user.id,
-        status: { in: ['responded', 'converted'] },
-      },
-    });
+    const [{ count: successfulLeads }] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(tables.leads)
+      .where(and(eq(tables.leads.userId, session.user.id), inArray(tables.leads.status, ['responded', 'converted'])));
 
     const responseRate = totalLeads > 0 ? (successfulLeads / totalLeads) * 100 : 0;
 
     // Format campaigns data
-    const formattedCampaigns = campaigns.map(campaign => ({
-      id: campaign.id,
-      name: campaign.name,
-      status: campaign.status,
-      totalLeads: campaign.leads.length,
-      successfulLeads: campaign.leads.filter(lead => 
-        lead.status === 'responded' || lead.status === 'converted'
-      ).length,
-    }));
+    const formattedCampaigns = campaigns.map(c => {
+      const cCounts = campaignIdToCounts.get(c.id) ?? { total: 0, successful: 0 };
+      return {
+        id: c.id,
+        name: c.name,
+        status: c.status,
+        totalLeads: cCounts.total,
+        successfulLeads: cCounts.successful,
+      };
+    });
 
     // Format LinkedIn accounts data
     const formattedLinkedinAccounts = linkedinAccounts.map(account => ({
@@ -112,7 +110,7 @@ export async function GET(request: NextRequest) {
       id: lead.id,
       name: lead.name,
       title: lead.title || '',
-      campaign: lead.campaign.name,
+      campaign: lead.campaignName,
       status: lead.status,
       statusType: lead.status,
       profileImage: lead.profileImage,

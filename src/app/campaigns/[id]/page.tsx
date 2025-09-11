@@ -11,7 +11,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { db } from "@/lib/db";
+import { db, tables } from "@/lib/db";
+import { eq } from "drizzle-orm";
 
 export default async function CampaignDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -19,14 +20,11 @@ export default async function CampaignDetailsPage({ params }: { params: Promise<
   // Fetch campaign name for breadcrumb
   let campaignName = "Campaign";
   try {
-    const campaign = await db.campaign.findFirst({
-      where: {
-        id: id,
-      },
-      select: {
-        name: true,
-      },
-    });
+    const [campaign] = await db
+      .select({ name: tables.campaigns.name })
+      .from(tables.campaigns)
+      .where(eq(tables.campaigns.id, id))
+      .limit(1);
     
     if (campaign) {
       campaignName = campaign.name;
