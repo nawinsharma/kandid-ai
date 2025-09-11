@@ -1,4 +1,12 @@
 # Kandid AI Assignment 
+assignment problem: https://docs.google.com/document/d/1bkC2GFeyPdP8o2U_JwzvSFmcCZXg53V78KdkAyYf_uQ/edit?tab=t.0
+deployed: https://kandid-ai.vercel.app/
+
+video:
+
+
+https://github.com/user-attachments/assets/9b70eb6d-f7c2-4296-9a82-bb39794ee7be
+
 
 ## Features
 
@@ -14,7 +22,7 @@
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS, shadcn/ui
-- **Database**: PostgreSQL, Drizzle ORM
+- **Database**: PostgreSQL, prisma ORM
 - **Authentication**: Better Auth
 - **State Management**: Zustand, TanStack Query
 - **Deployment**: Vercel (recommended)
