@@ -1,8 +1,8 @@
 # Kandid AI Assignment 
-assignment problem: https://docs.google.com/document/d/1bkC2GFeyPdP8o2U_JwzvSFmcCZXg53V78KdkAyYf_uQ/edit?tab=t.0
-deployed: https://kandid-ai.vercel.app/
-
-video:
+- assignment problem: https://docs.google.com/document/d/1bkC2GFeyPdP8o2U_JwzvSFmcCZXg53V78KdkAyYf_uQ/edit?tab=t.0
+- deployed: https://kandid-ai.vercel.app/
+- login credential : email: nawinsharma60@gmail.com, password:nawinsharma60@gmail.com
+- video:
 
 
 https://github.com/user-attachments/assets/9b70eb6d-f7c2-4296-9a82-bb39794ee7be
@@ -134,28 +134,6 @@ docker-compose up -d
 - [API Documentation](./docs/api.md) - API endpoints and usage
 - [Component Library](./docs/components.md) - UI components reference
 
-## Project Structure
-
-```
-kandid-ai/
-├── src/
-│   ├── app/                 # Next.js app router
-│   │   ├── api/            # API routes
-│   │   ├── auth/           # Authentication pages
-│   │   ├── campaigns/      # Campaign pages
-│   │   └── leads/          # Lead pages
-│   ├── components/         # React components
-│   │   ├── ui/            # shadcn/ui components
-│   │   └── providers/     # Context providers
-│   ├── hooks/             # Custom React hooks
-│   ├── lib/               # Utilities and configurations
-│   │   ├── db/           # Database schema and connection
-│   │   └── auth.ts       # Authentication configuration
-│   └── middleware.ts      # Next.js middleware
-├── scripts/               # Setup and utility scripts
-├── drizzle.config.ts      # Drizzle ORM configuration
-└── package.json
-```
 
 ## Configuration
 
@@ -199,14 +177,5 @@ The application uses the following main tables:
 ## License
 
 This project is proprietary software. All rights reserved.
-
-## Support
-
-For support and questions:
-- Check the [Documentation](./DATABASE_SETUP.md)
-- Open an [Issue](https://github.com/your-repo/issues)
-- Contact the development team
-
----
 
 Built with Next.js, TypeScript, and modern web technologies.
