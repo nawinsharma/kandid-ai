@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Eye, EyeOff, Mail} from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import { useSeedUser } from "@/hooks/use-seed-user";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -26,7 +27,8 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showRedirectButton, setShowRedirectButton] = useState(false);
   
-  // Form states
+  const seedUserMutation = useSeedUser();
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -172,11 +174,17 @@ export function AuthModal({ isOpen, onClose, initialMode = "welcome" }: AuthModa
               autoClose: 5000,
             });
           } else {
-            console.log("✅ Auto-login successful!");
+            console.log(" Auto-login successful!");
             toast.success("Welcome! You're now logged in.", {
               position: "top-right",
               autoClose: 3000,
             });
+            try {
+              console.log(" Seeding data for new user...");
+              await seedUserMutation.mutateAsync();
+            } catch (seedError) {
+              console.error(" Error seeding user data:", seedError);
+            }
             
             // Close modal and redirect
             onClose();

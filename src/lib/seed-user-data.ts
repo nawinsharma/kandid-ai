@@ -2,10 +2,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Sample campaigns - userIds will be set to actual user IDs after users are created through Better Auth
-const dummyCampaigns = [
+// Sample campaigns data (from main seed file)
+const sampleCampaigns = [
   {
-    id: "campaign_1",
     name: "Just Herbs",
     description: "Outreach campaign for Just Herbs brand partnerships",
     status: "active",
@@ -22,11 +21,9 @@ const dummyCampaigns = [
       autopilot: true,
       personalization: true,
       selectedAccounts: ["linkedin_1", "linkedin_2"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_2", 
     name: "Juicy chemistry",
     description: "Connecting with beauty and wellness industry professionals",
     status: "active",
@@ -43,11 +40,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_3"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_3",
     name: "Hyugalife 2",
     description: "Building connections with health and wellness professionals",
     status: "active",
@@ -63,11 +58,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_1"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_4",
     name: "Honeyveda",
     description: "Targeting Ayurveda and natural health practitioners",
     status: "active",
@@ -84,11 +77,9 @@ const dummyCampaigns = [
       autopilot: true,
       personalization: true,
       selectedAccounts: ["linkedin_1", "linkedin_4"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_5",
     name: "HempStreet",
     description: "Connecting with cannabis and hemp industry professionals",
     status: "active",
@@ -104,11 +95,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_5"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_6",
     name: "HealthyHey 2",
     description: "Outreach to health and fitness industry leaders",
     status: "active",
@@ -124,11 +113,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_1"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_7",
     name: "Herbal Chakra",
     description: "Connecting with herbal medicine and wellness practitioners",
     status: "active",
@@ -144,11 +131,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_1"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_8",
     name: "Healofy",
     description: "Building connections with healthcare and wellness professionals",
     status: "active",
@@ -164,11 +149,9 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_1"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   },
   {
-    id: "campaign_9",
     name: "HealthSense",
     description: "Targeting health technology and wellness professionals",
     status: "active",
@@ -184,15 +167,14 @@ const dummyCampaigns = [
       autopilot: false,
       personalization: true,
       selectedAccounts: ["linkedin_1"]
-    },
-    userId: "PLACEHOLDER_USER_1" // Will be replaced with actual user ID
+    }
   }
 ];
 
-const dummyLeads = [
+// Sample leads data (from main seed file)
+const sampleLeads = [
   // Just Herbs Campaign leads
   {
-    id: "lead_1",
     name: "Sumeet Malhotra",
     email: "sumeet.malhotra@justherbs.com",
     title: "Don't Stop When you tired Stop when You're done",
@@ -209,12 +191,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_2",
     name: "Megha Sabhlok",
     email: "megha.sabhlok@justherbs.com",
     title: "Co-founder, Just Herbs (acquired by Mari)",
@@ -231,12 +210,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_3",
     name: "Archee P.",
     email: "archee.p@justherbs.com",
     title: "Content and Marketing Specialist at Just",
@@ -253,12 +229,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_4",
     name: "Hindustan Herbs",
     email: "contact@hindustanherbs.com",
     title: "Co-Founder at Hindustan Herbs",
@@ -275,12 +248,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_5",
     name: "Ritika Ohri",
     email: "ritika.ohri@justherbs.com",
     title: "Brand Manager: Marketing, Talent and Inn",
@@ -297,12 +267,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_6",
     name: "Praveen Kumar Gautam",
     email: "praveen.gautam@justherbs.com",
     title: "Vice President - Offline Sales @ Just He",
@@ -319,12 +286,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_7",
     name: "Shubham Saboo",
     email: "shubham.saboo@justherbs.com",
     title: "Associated as C&F Agent & Superstockiest",
@@ -341,12 +305,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_8",
     name: "Megha Sabhlok",
     email: "megha.sabhlok2@justherbs.com",
     title: "Brand Director at Just Herbs",
@@ -363,13 +324,10 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_1",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   // Gynoveda Campaign leads
   {
-    id: "lead_9",
     name: "Om Satyarthy",
     email: "om.satyarthy@gynoveda.com",
     title: "Regional Head",
@@ -386,12 +344,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_4",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_10",
     name: "Dr. Bhuvaneshwari",
     email: "dr.bhuvaneshwari@gynoveda.com",
     title: "Fertility & Women's Health A",
@@ -408,12 +363,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_4",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_11",
     name: "Surdeep Singh",
     email: "surdep.singh@gynoveda.com",
     title: "Building Product-led SEO Growt",
@@ -430,12 +382,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_4",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_12",
     name: "Dilbag Singh",
     email: "dilbag.singh@gynoveda.com",
     title: "Manager Marketing & Communicat",
@@ -452,12 +401,9 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_4",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   {
-    id: "lead_13",
     name: "Vanshy Jain",
     email: "vanshy.jain@gynoveda.com",
     title: "Ayurveda||primary infertility|",
@@ -474,13 +420,10 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_4",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   // Digi Sidekick Campaign leads
   {
-    id: "lead_14",
     name: "Sunil Pal",
     email: "sunil.pal@digisidekick.com",
     title: "Helping Fashion & Lifestyle Br",
@@ -497,13 +440,10 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_2",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   // The skin story Campaign leads
   {
-    id: "lead_15",
     name: "Utkarsh K.",
     email: "utkarsh.k@theskinstory.com",
     title: "Airbnb Host | Ex-The Skin Stor",
@@ -520,13 +460,10 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_2",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   // Pokonut Campaign leads
   {
-    id: "lead_16",
     name: "Shreya Ramakrishna",
     email: "shreya.ramakrishna@pokonut.com",
     title: "Deputy Manager - Founder's Off",
@@ -543,13 +480,10 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_2",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   },
   // Re'equil Campaign leads
   {
-    id: "lead_17",
     name: "Deepak Kumar",
     email: "deepak.kumar@reequil.com",
     title: "Deputy manager Advertising and",
@@ -566,141 +500,158 @@ const dummyLeads = [
         timestamp: "2024-02-15T09:00:00Z",
         status: "sent"
       }
-    ],
-    campaignId: "campaign_2",
-    userId: "PLACEHOLDER_USER_1"
+    ]
   }
 ];
 
-const dummyLinkedinAccounts = [
+// Sample LinkedIn accounts data (from main seed file)
+const sampleLinkedinAccounts = [
   {
-    id: "linkedin_1",
     name: "Pulkit Garg",
     email: "1999pulkitgarg@gmail.com",
     status: "connected",
     requestsSent: 17,
     requestsLimit: 30,
-    progress: 56.67,
-    userId: "PLACEHOLDER_USER_1"
+    progress: 56.67
   },
   {
-    id: "linkedin_2",
     name: "Jivesh Lakhani",
-    email: "jivesh@gmail.com", 
+    email: "jivesh@gmail.com",
     status: "connected",
     requestsSent: 19,
     requestsLimit: 30,
-    progress: 63.33,
-    userId: "PLACEHOLDER_USER_1"
+    progress: 63.33
   },
   {
-    id: "linkedin_3",
     name: "Indrajit Sahani",
     email: "indrajit38mp@gmail.com",
     status: "connected",
     requestsSent: 18,
     requestsLimit: 30,
-    progress: 60.00,
-    userId: "PLACEHOLDER_USER_1"
+    progress: 60.00
   },
   {
-    id: "linkedin_4",
     name: "Bhavya Arora",
     email: "bhavyaarora199.ba@gmail.com",
     status: "connected",
     requestsSent: 18,
     requestsLimit: 100,
-    progress: 18.00,
-    userId: "PLACEHOLDER_USER_1"
+    progress: 18.00
   }
 ];
 
-async function seedDatabase() {
+export async function seedUserData(userId: string) {
   try {
-    console.log("🌱 Starting database seeding...");
+    console.log(`Starting data seeding for user: ${userId}`);
     
-    // Check if there are any users in the database
-    const userCount = await prisma.user.count();
-    console.log(`👤 Found ${userCount} users in the database`);
+    // Check if user already has data
+    const existingCampaigns = await prisma.campaign.count({
+      where: { userId }
+    });
     
-    if (userCount === 0) {
-      console.log("⚠️  No users found in the database.");
-      console.log("   Please create a user through Better Auth authentication first.");
-      console.log("   Then re-run this seed script to populate the database with sample data.");
+    if (existingCampaigns > 0) {
+      console.log(`⚠️  User ${userId} already has campaigns. Skipping seeding.`);
       return;
     }
     
-    // Get the first user to use as the owner of the sample data
-    const firstUser = await prisma.user.findFirst();
-    if (!firstUser) {
-      console.log("❌ No user found to associate sample data with.");
-      return;
+    // Create LinkedIn accounts first
+    console.log("Creating LinkedIn accounts...");
+    const linkedinAccounts = await Promise.all(
+      sampleLinkedinAccounts.map(account =>
+        prisma.linkedinAccount.create({
+          data: {
+            ...account,
+            userId
+          }
+        })
+      )
+    );
+    console.log(`Created ${linkedinAccounts.length} LinkedIn accounts`);
+    
+    // Create campaigns
+    console.log("Creating campaigns...");
+    const campaigns = await Promise.all(
+      sampleCampaigns.map(campaign =>
+        prisma.campaign.create({
+          data: {
+            ...campaign,
+            userId
+          }
+        })
+      )
+    );
+    console.log(`Created ${campaigns.length} campaigns`);
+    
+    // Create leads and associate them with campaigns
+    const leadsPerCampaign = Math.ceil(sampleLeads.length / campaigns.length);
+    
+    for (let i = 0; i < campaigns.length; i++) {
+      const campaign = campaigns[i];
+      const startIndex = i * leadsPerCampaign;
+      const endIndex = Math.min(startIndex + leadsPerCampaign, sampleLeads.length);
+      const campaignLeads = sampleLeads.slice(startIndex, endIndex);
+      
+      await Promise.all(
+        campaignLeads.map(lead =>
+          prisma.lead.create({
+            data: {
+              ...lead,
+              campaignId: campaign.id,
+              userId
+            }
+          })
+        )
+      );
     }
     
-    console.log(`👤 Using user: ${firstUser.email} (ID: ${firstUser.id})`);
-    
-    // Update all sample data to use the actual user ID
-    const updatedLinkedinAccounts = dummyLinkedinAccounts.map(account => ({
-      ...account,
-      userId: firstUser.id
-    }));
-    
-    const updatedCampaigns = dummyCampaigns.map(campaign => ({
-      ...campaign,
-      userId: firstUser.id
-    }));
-    
-    const updatedLeads = dummyLeads.map(lead => ({
-      ...lead,
-      userId: firstUser.id
-    }));
-    
-    // Clear existing data (in reverse order due to foreign key constraints)
-    console.log("🧹 Clearing existing data...");
-    await prisma.lead.deleteMany();
-    await prisma.campaign.deleteMany();
-    await prisma.linkedinAccount.deleteMany();
-    // Note: We don't delete users as they should be managed by Better Auth
-    
-    // Insert LinkedIn accounts
-    console.log("🔗 Inserting LinkedIn accounts...");
-    await prisma.linkedinAccount.createMany({
-      data: updatedLinkedinAccounts
+    const totalLeads = await prisma.lead.count({
+      where: { userId }
     });
-    console.log(`✅ Inserted ${updatedLinkedinAccounts.length} LinkedIn accounts`);
+    console.log(`✅ Created ${totalLeads} leads`);
     
-    // Insert campaigns
-    console.log("📊 Inserting campaigns...");
-    await prisma.campaign.createMany({
-      data: updatedCampaigns
-    });
-    console.log(`✅ Inserted ${updatedCampaigns.length} campaigns`);
+    console.log("🎉 User data seeding completed successfully!");
+    console.log(`📊 Summary for user ${userId}:`);
+    console.log(`- LinkedIn Accounts: ${linkedinAccounts.length}`);
+    console.log(`- Campaigns: ${campaigns.length}`);
+    console.log(`- Leads: ${totalLeads}`);
     
-    // Insert leads
-    console.log("🎯 Inserting leads...");
-    await prisma.lead.createMany({
-      data: updatedLeads
-    });
-    console.log(`✅ Inserted ${updatedLeads.length} leads`);
-    
-    console.log("🎉 Database seeding completed successfully!");
-    console.log("\n📊 Summary:");
-    console.log(`- LinkedIn Accounts: ${updatedLinkedinAccounts.length}`);
-    console.log(`- Campaigns: ${updatedCampaigns.length}`);
-    console.log(`- Leads: ${updatedLeads.length}`);
-    console.log(`- Associated with user: ${firstUser.email}`);
+    return {
+      linkedinAccounts: linkedinAccounts.length,
+      campaigns: campaigns.length,
+      leads: totalLeads
+    };
     
   } catch (error) {
-    console.error("❌ Error seeding database:", error);
+    console.error(` Error seeding data for user ${userId}:`, error);
     throw error;
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
-// Run the seed function
-seedDatabase()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+export async function checkAndSeedUserData(userId: string) {
+  try {
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+    
+    if (!user) {
+      console.log(`  User ${userId} not found. Skipping seeding.`);
+      return;
+    }
+    
+    // Check if user already has data
+    const existingCampaigns = await prisma.campaign.count({
+      where: { userId }
+    });
+    
+    if (existingCampaigns > 0) {
+      return;
+    }
+    
+    // Seed data for the user
+    return await seedUserData(userId);
+    
+  } catch (error) {
+    throw error;
+  }
+}

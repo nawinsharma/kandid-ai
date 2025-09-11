@@ -1,7 +1,7 @@
 # Kandid AI Assignment 
 - assignment problem: https://docs.google.com/document/d/1bkC2GFeyPdP8o2U_JwzvSFmcCZXg53V78KdkAyYf_uQ/edit?tab=t.0
 - deployed: https://kandid-ai.vercel.app/
-- login credential : email: nawinsharma60@gmail.com, password:nawinsharma60@gmail.com
+- login credential : email: user@gmail.com, password: User@12345
 - video:
 
 

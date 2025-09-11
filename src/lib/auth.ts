@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
+import { checkAndSeedUserData } from "./seed-user-data";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -38,6 +39,22 @@ export const auth = betterAuth({
     onError: (error, ctx) => {
       console.error("Better Auth API Error:", error);
       console.error("Context:", ctx);
+    },
+  },
+  // Add callback for user creation to seed data
+  callbacks: {
+    onSuccess: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      signUp: async (ctx: any) => {
+        if (ctx.user?.id) {
+          console.log(`New user created: ${ctx.user.email} (ID: ${ctx.user.id})`);
+          // Seed data for the new user asynchronously
+          checkAndSeedUserData(ctx.user.id).catch(error => {
+            console.error("Failed to seed data for new user:", error);
+          });
+        }
+        return ctx;
+      },
     },
   },
 });
