@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Users, Mail, MessageSquare, RotateCcw, ChevronDown, Info } from "lucide-react"
+import { Users, Mail, MessageSquare, RotateCcw, Info, Clock, ChevronDown } from "lucide-react"
 import { LeadProfilePanel } from "@/components/lead-profile-panel"
 import { useCampaign } from "@/hooks/use-campaigns"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -43,17 +43,18 @@ interface Lead {
 // Helper function to get status badge
 const getStatusBadge = (status: string) => {
   const statusConfig = {
-    pending: { className: "bg-orange-50 text-orange-700 border-orange-200", label: "Pending" },
-    contacted: { className: "bg-blue-50 text-blue-700 border-blue-200", label: "Contacted" },
-    responded: { className: "bg-green-50 text-green-700 border-green-200", label: "Responded" },
-    converted: { className: "bg-purple-50 text-purple-700 border-purple-200", label: "Converted" },
-    blocked: { className: "bg-red-50 text-red-700 border-red-200", label: "Blocked" },
+    pending: { className: "bg-orange-50 text-orange-700 border-orange-200", label: "Pending", icon: Clock },
+    contacted: { className: "bg-blue-50 text-blue-700 border-blue-200", label: "Contacted", icon: null },
+    responded: { className: "bg-green-50 text-green-700 border-green-200", label: "Responded", icon: null },
+    converted: { className: "bg-purple-50 text-purple-700 border-purple-200", label: "Converted", icon: null },
+    blocked: { className: "bg-red-50 text-red-700 border-red-200", label: "Blocked", icon: null },
   };
   
   const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
   
   return (
-    <Badge variant="secondary" className={config.className}>
+    <Badge variant="secondary" className={`${config.className} text-xs`}>
+      {config.icon && <config.icon className="w-3 h-3 mr-1" />}
       {config.label}
     </Badge>
   );
@@ -159,19 +160,13 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
   const renderActivityBars = (level: number) => {
     return (
       <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((bar) => (
+        {[1, 2, 3, 4].map((bar) => (
           <div
             key={bar}
             className={`w-1 h-4 rounded-sm ${
               bar <= level
-                ? level <= 2
-                  ? "bg-blue-500"
-                  : level <= 3
-                    ? "bg-yellow-500"
-                    : level <= 4
-                      ? "bg-orange-500"
-                      : "bg-purple-500"
-                : "bg-gray-200"
+                ? "bg-gray-400 dark:bg-gray-500"
+                : "bg-gray-200 dark:bg-gray-600"
             }`}
           />
         ))}
@@ -184,7 +179,7 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">{campaign.name}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Campaign Details</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage and track your campaign performance</p>
         </div>
         <Badge variant="secondary" className={
@@ -201,23 +196,25 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
-          <TabsTrigger value="overview" className="flex items-center gap-2 data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700">
-            <div className="w-4 h-4 rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700"></div>
+      <Tabs defaultValue="leads" className="w-full">
+        <TabsList className="inline-flex h-auto items-center justify-start bg-transparent p-0 border-0 shadow-none">
+          <TabsTrigger value="overview" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <div className="w-4 h-4 rounded border border-gray-400 bg-white mr-2 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+            </div>
             Overview
           </TabsTrigger>
-          <TabsTrigger value="leads" className="flex items-center gap-2 data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700">
-            <Users className="w-4 h-4" />
+          <TabsTrigger value="leads" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <Users className="w-4 h-4 mr-2" />
             Leads
           </TabsTrigger>
-          <TabsTrigger value="sequence" className="flex items-center gap-2 data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700">
-            <RotateCcw className="w-4 h-4" />
+          <TabsTrigger value="sequence" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <RotateCcw className="w-4 h-4 mr-2" />
             Sequence
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-neutral-100 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-150 dark:hover:bg-neutral-700">
-            <div className="w-4 h-4 rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-500"></div>
+          <TabsTrigger value="settings" className="inline-flex items-center justify-center whitespace-nowrap px-4 py-3 text-sm font-medium border-0 border-b-2 border-transparent data-[state=active]:border-b-2 data-[state=active]:border-purple-400 data-[state=active]:text-purple-400 data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-gray-900 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-0 text-gray-600 rounded-none">
+            <div className="w-4 h-4 rounded border border-gray-400 bg-white mr-2 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-gray-400"></div>
             </div>
             Settings
           </TabsTrigger>
@@ -298,7 +295,7 @@ export function CampaignDetails({ campaignId }: CampaignDetailsProps) {
             {/* Campaign Details */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Campaign Details</CardTitle>
+                <CardTitle className="text-3xl font-bold">Campaign Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
