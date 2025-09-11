@@ -5,28 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, MoreHorizontal, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { LeadProfilePanel } from "@/components/lead-profile-panel";
-import { CreateLeadForm } from "@/components/create-lead-form";
 import { useLeads } from "@/hooks/use-leads";
-import { useUIStore } from "@/lib/store";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
   const [selectedLead, setSelectedLead] = useState<Record<string, unknown> | null>(null);
-  const { searchQuery, filterStatus, setSearchQuery, setFilterStatus } = useUIStore();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useLeads();
-
-  // Debounced search
-  const [searchInput, setSearchInput] = useState(searchQuery);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearchQuery(searchInput);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchInput, setSearchQuery]);
 
   // Infinite scroll
   const handleScroll = useCallback(() => {
@@ -48,19 +34,13 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
   const renderActivityBars = useCallback((level: number) => {
     return (
       <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((bar) => (
+        {[1, 2, 3, 4].map((bar) => (
           <div
             key={bar}
             className={`w-1 h-4 rounded-sm ${
               bar <= level
-                ? level <= 2
-                  ? "bg-blue-500"
-                  : level <= 3
-                    ? "bg-yellow-500"
-                    : level <= 4
-                      ? "bg-orange-500"
-                      : "bg-purple-500"
-                : "bg-gray-200"
+                ? "bg-gray-400 dark:bg-gray-500"
+                : "bg-gray-200 dark:bg-gray-600"
             }`}
           />
         ))}
@@ -117,55 +97,11 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
 
   return (
     <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-        <span>Leads</span>
-      </div>
-
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage and track your leads across all campaigns
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Leads</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <CreateLeadForm />
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-          <Button variant="outline" size="sm">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Search and Filter */}
-      <div className="flex items-center gap-4">
-        <div className="relative w-80">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-neutral-500 w-4 h-4" />
-          <Input
-            placeholder="Search leads..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100"
-          />
-        </div>
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-48 bg-white dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 text-gray-900 dark:text-neutral-100">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="contacted">Contacted</SelectItem>
-            <SelectItem value="responded">Responded</SelectItem>
-            <SelectItem value="converted">Converted</SelectItem>
-            <SelectItem value="blocked">Blocked</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Leads Table */}
@@ -200,7 +136,7 @@ const LeadsViewEnhanced = memo(function LeadsViewEnhanced() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-1">
-                          {[1, 2, 3, 4, 5].map((bar) => (
+                          {[1, 2, 3, 4].map((bar) => (
                             <Skeleton key={bar} className="w-1 h-4" />
                           ))}
                         </div>
